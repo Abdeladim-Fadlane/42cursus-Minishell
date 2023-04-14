@@ -6,15 +6,15 @@
 #    By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/03 12:04:04 by afadlane          #+#    #+#              #
-#    Updated: 2023/04/07 17:54:45 by afadlane         ###   ########.fr        #
+#    Updated: 2023/04/14 00:25:21 by afadlane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 	Minishell
 
-CFLAGS = -Wall -Werror -Wextra   #-fsanitize=address 
+CFLAGS = -Wall -Werror -Wextra   -fsanitize=address  -g3
 
-SRC = minishell.c main.c  minishell_utills.c get_next_line.c
+SRC = minishell.c main.c  minishell_utills.c get_next_line.c libft.c ft_split.c
 	
 cc = gcc
 #OBJ = ${SRC:.c=.o}

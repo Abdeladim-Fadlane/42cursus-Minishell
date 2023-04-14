@@ -6,37 +6,35 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 01:41:59 by afadlane          #+#    #+#             */
-/*   Updated: 2023/04/08 01:42:09 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/04/13 23:54:32 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 
+// char	*ft_substr(char *s, int start, int len)
+// {
+// 	int		i;
+// 	char	*p;
 
-#include "pipex.h"
-
-char	*ft_substr(char *s, int start, int len)
-{
-	int		i;
-	char	*p;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	if (ft_strlen(s) <= start)
-		return (ft_strdup(""));
-	p = malloc(sizeof(char) * (len + 1));
-	if (!p)
-		return (NULL);
-	while (i < len && s[i + start] != '\0')
-	{
-		p[i] = s[i + start];
-		i++;
-	}
-	p[i] = '\0';
-	return (p);
-}
+// 	i = 0;
+// 	if (!s)
+// 		return (NULL);
+// 	if (len > ft_strlen(s) - start)
+// 		len = ft_strlen(s) - start;
+// 	if (ft_strlen(s) <= start)
+// 		return (ft_strdup(""));
+// 	p = malloc(sizeof(char) * (len + 1));
+// 	if (!p)
+// 		return (NULL);
+// 	while (i < len && s[i + start] != '\0')
+// 	{
+// 		p[i] = s[i + start];
+// 		i++;
+// 	}
+// 	p[i] = '\0';
+// 	return (p);
+// }
 
 static int	ft_count(char *s, char c)
 {
