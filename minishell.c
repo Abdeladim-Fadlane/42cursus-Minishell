@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:23 by afadlane          #+#    #+#             */
-/*   Updated: 2023/04/14 02:47:20 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/04/14 17:37:50 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	ft_pwd(void)
 
 void	ft_echo(char *s,char *op)
 {
+    // while(*s != ' ')
+    //     s++;
 	write(1, s, ft_strlen(s));
 	if(op)
 		write(1, "\n", 2);
@@ -128,7 +130,7 @@ void    ft_readline(t_env *lst,int ac ,char **av)
   
 	while (ac && av)
 	{
-		buff = readline("Minishell$ > ");
+		buff = readline("afadlane$ > ");
 		add_history(buff);
 		if (buff == NULL)
 			break ;
@@ -136,14 +138,14 @@ void    ft_readline(t_env *lst,int ac ,char **av)
 			ft_pwd();
 		if (ft_strcmp(buff, "cd") == 0)
 			ft_cd("bonus", lst);
-		if (ft_strcmp(buff, "echo") == 0)
-			ft_echo(buff,"-n");
+		if (ft_strcmp(ft_split(buff ,' ')[0], "echo") == 0)
+			ft_echo(ft_split(buff ,' ')[1],"-n");
 		if (ft_strcmp(buff, "env") == 0)
 			print_env(lst);
 		if (ft_strcmp(buff, "export") == 0)
 		{  
             t_env tmp = *lst;
-			add_to_export(lst,buff);
+			//add_to_export(lst,buff);
 			sort_export(&tmp, ft_strcmp);
 			print_export(&tmp);
 		}
