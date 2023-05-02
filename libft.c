@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 18:07:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/04/14 00:29:25 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:55:00 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_env	*ft_lstnew(char *s,char *d)
 	t_env	*list;
 
 	list = (t_env *)malloc(sizeof(t_env));
+	
 	list->data = d;
     list->key = s;
 	list->next = NULL;
@@ -61,10 +62,12 @@ int	ft_lstsize(t_env *list)
 	return (i);
 }
 
+
 int ft_strcmp(char *s1, char *s2)
 {
 	int i = 0;
-	
+	if(!s1 || !s2)
+		return(1);
 	while(s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])	
 		i++;
 	return (s1[i] - s2[i]);

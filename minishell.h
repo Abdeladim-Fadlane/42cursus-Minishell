@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/04/14 17:46:18 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:54:52 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct env
 
 int		get_len(char **env);
 char	**split_pwd(char **env, int j);
-void	add_to_export(t_env *lst, char *s);
+void	_add_to_export(t_env *lst, char *s);
 char	*get_next_line(int fd);
 t_env	*ft_lstnew(char *s,char *d);
 void	add_back(t_env **list, t_env *new);

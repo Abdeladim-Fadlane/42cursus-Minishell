@@ -6,59 +6,77 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/04/14 18:07:32 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/02 20:17:08 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-void	sort_export(t_env *tmp, int (*ft_strcmp) (char *, char *))
+void	check_erorrs(char *s)
 {
-	t_env	*lst;
-	char	*swap;
-	char	*swap1;
-
-	lst = tmp;
-	while (tmp && tmp->next)
+	if(ft_isalpha(s[0]) == 0)
 	{
-		if (((*ft_strcmp)((tmp)->key, (tmp)->next->key)) > 0)
-		{
-			swap = (tmp)->data;
-			(tmp)->data = (tmp)->next->data;
-			(tmp)->next->data = swap;
-			swap1 = (tmp)->key;
-			(tmp)->key = (tmp)->next->key;
-			(tmp)->next->key = swap1;
-			(tmp) = lst;
-		}
-		else
-			(tmp) = (tmp)->next;
+		printf("export : %s not a valid identifier\n",s);
+		exit(1);
 	}
-	(tmp) = lst;
-	
 }
-// int		export_parcing(char *s)
-// {
-// 	if()
-// }
+int 	__check_add(char *s)
+{
+	int i = 0;
+	while(s[i])
+	{
+		if(s[i] == '+')
+			return (0);
+		i++;
+	}
+	return(1);
+		
+}
 
-// void	add_to_export(t_env *lst, char *s)
-// {
-// 	int  i =0;
-// 	int j = 1;
-// 	char **p = ft_split(s,' ');
-// 	while(p)
-// 		i++;
-// 	while(j++ < i)
-// 	{
-// 		if(export_parcing(p[j]))
-// 	}
-// 	if(p[1] == NULL)
-// 		return;
-// 	char **ptr = ft_split(p[1],'=');
-// 	add_back(&lst,ft_lstnew(ptr[0],ptr[1]));
-// }
+int 	__check_key_exit(t_env *lst,char *s)
+{
+	while(lst)
+	{
+		if(ft_strcmp(lst->key,s) == 0)
+			return (0);
+		lst = lst->next;
+	}
+	return(1);
+}
+
+void 	__check_data_exit(t_env *lst,char **s)
+{
+	while(lst)
+	{
+		if(ft_strcmp(lst->key,s[0]) == 0)
+		{
+			//if(lst->data != NULL)
+				if(ft_strcmp(lst->data,s[1]))
+					lst->data = ft_strdup(s[1]);
+		}
+		lst = lst->next;
+	}
+}
+
+void	_add_to_export(t_env *lst, char *s)
+{
+	int i = 0;
+	char **p = ft_split(s,' ');
+	if(p[1] == NULL)
+		return;
+	while(p[i])
+		i++;
+	int j = 1 ;
+	while(j < i)
+	{
+		check_erorrs(p[j]);
+		char **ptr = ft_split(p[j],'='); 
+		if( __check_key_exit(lst,ptr[0]))
+			add_back(&lst,ft_lstnew(ptr[0],ptr[1]));
+		__check_data_exit(lst,ptr);
+		j++;
+	}	
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -67,9 +85,7 @@ int	main(int ac, char **av, char **env)
  	char	**p;
 	int j = 0;
    
-
-
-   
+	ft_isdigit('1');
 	while (j < get_len(env))
 	{
 		p = split_pwd(env, j);
