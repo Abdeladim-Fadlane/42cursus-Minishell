@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.c                                            :+:      :+:    :+:   */
+/*   bonus_libft.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 18:07:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/02 19:55:00 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/05 22:14:53 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,27 @@ t_env	*ft_lstnew(char *s,char *d)
 	return (list);
 }
 
-t_env	*ft_lstlast(t_env **list)
+t_env	*ft_lstlast(t_env *lst)
 {
-	t_env	*tmp;
-
-	tmp = (*list);
-	while (tmp->next)
-		tmp = tmp->next;
-	return (tmp);
+	if (lst)
+	{
+		while (lst->next)
+			lst = lst->next;	
+	}
+	
+	return (lst);
 }
 
-void	add_back(t_env **list, t_env *new)
+void	add_back(t_env *lst, t_env *new)
 {
-	t_env	*tmp;
-
-	tmp = (*list);
-	if ((*list) == NULL)
-		*list = new;
-	else if ((*list))
+	if (!new)
+		return ;
+	if (!lst)
 	{
-		tmp = ft_lstlast(list);
-		tmp->next = new;
+		lst = new;
+		return ;
 	}
+	ft_lstlast(lst)->next = new;
 }
 
 int	ft_lstsize(t_env *list)

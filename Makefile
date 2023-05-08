@@ -6,7 +6,7 @@
 #    By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/03 12:04:04 by afadlane          #+#    #+#              #
-#    Updated: 2023/05/02 20:34:54 by afadlane         ###   ########.fr        #
+#    Updated: 2023/05/05 18:19:04 by afadlane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,12 @@ NAME = 	Minishell
 
 CFLAGS = -Wall -Werror -Wextra   -fsanitize=address  -g3
 
-SRC =  main.c  minishell_utills.c get_next_line.c libft.c minishell.c
+SRC =  main.c  minishell_utills.c get_next_line.c bonus_libft.c minishell.c
 
 cc = cc
 #OBJ = ${SRC:.c=.o}
 
-all :${NAME}
+all :${NAME} 
 
 run : ${NAME}
 		@./${NAME} 
@@ -35,7 +35,7 @@ clean :
 		@rm -f ${OBJ} 
 
 fclean : clean
-		@rm -f ${NAME} 
+		@rm -f ${NAME}
 
 nor:
 	norminette
