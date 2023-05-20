@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/14 00:01:12 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/20 12:42:00 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define DEL 3
 # define APE 4
 # define PIPE 1
-
+int s;
 typedef struct redir
 {
 	int type;
@@ -67,6 +67,7 @@ typedef struct shell
 	int in_id ;
 	int out_id ;
 	int pid;
+	
 
 } t_minishell;
 
@@ -79,6 +80,7 @@ typedef struct env
 	int			id;
 	int			flag_fd;
 	int			fd[2];
+	int n;
 }				t_env;
 
 typedef struct object
@@ -134,21 +136,45 @@ void print_data(t_minishell *shell);
 
 /// exute
 void ft_lstadd_back(t_env **lst, t_env *new);
-void __main__(t_env *lst, char **env, t_minishell *list, char *buff);
+void __main__(t_env *lst, char **env, t_minishell *list);
 void ft_error(void);
 void			x__(t_env *lst, char *s);
 int ft_lstsize(t_env *list);
 void ft_free(char **p);
+
+
+
 void			ft_error1(void);
 char			**__split__(char **env, int j);
-void			__add__to__export__(t_env *lst, char *s);
+void			__add__to__export__(t_env *lst,t_minishell *s);
 char			*get_next_line(int fd);
 void			aadd_back(t_env **list, t_env *new);
 void		add_back(t_env *lst, t_env *new);
 int				ft_strcmp(char *s1, char *s2);
 //void			__pipex__(t_env *lst, char *s);
-void	__built__in__(t_env *lst, char *buff,char **env ,t_minishell *list);
-t_env			*ft_lstnew(char *s, char *d);
+void	her_doc(char *s,t_minishell *lst,t_env *p);
+char **get_env(t_env *p);
+int __built__in__(t_env *lst, t_minishell *list, int i);
+t_env *ft_lstnew(char *s, char *d);
 void pipex(t_minishell *lst,t_env *p,char **env);
+int lstsize(t_minishell *list);
+void  __pwd__(int k, int fd,int g);
+
+char *check_env(t_env *p);
+void put_str(char *s, int fd);
+void	__echo__(t_minishell *lst,int k,int fd,int y);
+void	get_index_pwd(t_env *lst, char *path, char *s);
+char *get_user(t_env *lst);
+void __cd__(char *str, t_env *p);
+char **__split__(char **env, int j);
+void  __print__env__(t_env *p, int k, int fd,int j);
+void	__print__export__(t_env *p,int k ,int fd,int fdd);
+void __unset__(t_env *lst, t_minishell *ptr);
+
+
+
+
+
+
 // void	sort_export(t_env *tmp, int (*ft_strcmp) (char *, char *));
 #endif

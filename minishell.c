@@ -13,78 +13,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "minishell.h"
 
-void	open_infile(char *s,t_minishell *lst)
-{
-	//printf("%s-----\n", lst->redirct->in);
-	lst->in_id = open(s, O_RDONLY, 0644);
-	if (lst->in_id == -1)
-	{
-		perror(s);
-		exit(1);
-	}
-}
 
-void	open_outfile(char *s,t_minishell *lst)
-{
-	lst->out_id = open(s, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (lst->out_id == -1)
-		perror(s);
-} 
 
-void	her_doc(char *s,t_minishell *lst)
-{
-	(void)lst;
-	while (1)
-	{
-		char *buff = readline(">");
-		if (buff == NULL)
-		{
-			free(buff);
-			break;
-		}
-		if (buff[0] == '\0')
-		{
-			free(buff);
-			continue ;
-		}
-		if(ft_strcmp(s,buff) == 0)
-		{
-			break;
-			exit(0);
-		}
-	}
-	
-}
-
-void	print_data(t_minishell *shell)
-{
-	int i;
-
-	while (shell)
-	{
-		i = 0;
-		//printf("index : %d      pipe : %d\n", shell->index, shell->pipe);
-		while (shell->redirct)
-		{
-			if (shell->redirct->type == INF)
-			{
+// void	print_data(t_minishell *shell)
+// {
+// 	while (shell)
+// 	{
+// 		while (shell->redirct)
+// 		{
+// 			if (shell->redirct->type == INF)
+// 				open_infile(shell->redirct->in,shell);
+// 			if (shell->redirct->type == OUT)
+// 				open_outfile (shell->redirct->out,shell);
+// 			if (shell->redirct->type == APE)
+// 				open_append (shell->redirct->out,shell);
+// 			if (shell->redirct->type == DEL)
+// 			{
+// 				her_doc(shell->redirct->limiter,shell);
+// 			}
 				
-				open_infile(shell->redirct->in,shell);
-				
-			}
-			if (shell->redirct->type == OUT)
-				open_outfile (shell->redirct->out,shell);
-			if (shell->redirct->type == APE)
-				printf("APPEND : %s\n", shell->redirct->out);
-			if (shell->redirct->type == DEL)
-				her_doc(shell->redirct->limiter,shell);
-			shell->redirct = shell->redirct->next;
-		}
-		shell = shell->next;
-	}
-}
+// 			shell->redirct = shell->redirct->next;
+// 		}
+// 		shell = shell->next;
+// 	}
+// }
 
 void	ft_print(char **s)
 {
@@ -132,6 +87,17 @@ char **get_env(t_env *p)
 	return (ptr);
 }
 
+void    handle_clr(int signum)
+{
+    if (signum == SIGINT)
+    {
+        printf("\n");
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+		s = 1;
+	}
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -145,6 +111,7 @@ int	main(int ac, char **av, char **env)
 	int		j;
 	
 	j = 0;
+	
 	while (env[j])
 	{
 		p = __split__(env, j);
@@ -152,25 +119,34 @@ int	main(int ac, char **av, char **env)
 		free(p);
 		j++;
 	}
+	//ft_lstadd_back(&lst, ft_lstnew("OLDPWD", NULL));
 	t_minishell *shell;
 	shell = malloc(sizeof(t_minishell));
 	while (ac && av)
 	{
+		signal(SIGINT, handle_clr);
+		signal(SIGQUIT, SIG_IGN);
 		buff = readline("afadlane$ > ");
-		if (buff == NULL)
-			exit(1);
+		if (!buff)
+		{
+			write(2, "exit\n", 5);
+			s = 0;
+			exit(0);
+		}
+			
 		if (buff[0] == '\0')
 		{
 			free(buff);
 			continue ;
 		}
-		line = malloc(sizeof(char) * ft_strlen(buff) + (all_redric(buff) * 2) + 1); // zay l3assl yassmina
+
+		line = malloc(sizeof(char) * ft_strlen(buff) + (all_redric(buff) * 2) + 1); // This is the way!!
 		line = detach_rediec(buff, line); 
 		arg = parse_to_part(line); 
 		if (check_syntext(line) != 404 && line[0])
 		{
 			shell = parsing(arg);
-			__main__(lst, env,shell,buff);
+			__main__(lst, env,shell);
 		}
 		else if (!buff[0])
 		{

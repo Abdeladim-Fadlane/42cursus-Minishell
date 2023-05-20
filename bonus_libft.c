@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 18:07:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/14 00:10:28 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/14 15:26:28 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,18 @@ int	ft_lstsize(t_env *list)
 	}
 	return (i);
 }
+int	lstsize(t_minishell *list)
+{
+	int	i;
 
+	i = 0;
+	while (list)
+	{
+		i++;
+		list = list->next;
+	}
+	return (i);
+}
 int	ft_strcmp(char *s1, char *s2)
 {
 	int i = 0;
