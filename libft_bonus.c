@@ -1,29 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_libft.c                                      :+:      :+:    :+:   */
+/*   libft_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 18:07:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 22:03:35 by afadlane         ###   ########.fr       */
+/*   Created: 2023/05/22 16:41:11 by afadlane          #+#    #+#             */
+/*   Updated: 2023/05/24 22:02:46 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*ft_lstnew(char *s, char *d)
+int	ft_strcmp(char *s1, char *s2)
 {
-	t_env	*list;
+	int	i;
 
-	list = (t_env *)malloc(sizeof(t_env));
-	list->data = d;
-	list->key = s;
+	i = 0;
+	if (!s1 || !s2)
+		return (1);
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
+}
+
+t_object	*t_lstnew(char *s)
+{
+	t_object	*list;
+
+	list = (t_object *)malloc(sizeof(t_object));
+	list->s = s;
 	list->next = NULL;
 	return (list);
 }
 
-t_env	*ft_lstlast(t_env *lst)
+t_object	*t_lstlast(t_object *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -32,38 +43,12 @@ t_env	*ft_lstlast(t_env *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back(t_env **lst, t_env *new)
+void	t_lstadd_back(t_object **lst, t_object *new)
 {
 	if (!lst)
 		return ;
 	if (*lst)
-		ft_lstlast(*lst)->next = new;
+		t_lstlast(*lst)->next = new;
 	else
 		*lst = new;
-}
-
-int	ft_lstsize(t_env *list)
-{
-	int	i;
-
-	i = 0;
-	while (list)
-	{
-		i++;
-		list = list->next;
-	}
-	return (i);
-}
-
-int	lstsize(t_minishell *list)
-{
-	int	i;
-
-	i = 0;
-	while (list)
-	{
-		i++;
-		list = list->next;
-	}
-	return (i);
 }

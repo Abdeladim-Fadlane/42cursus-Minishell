@@ -16,31 +16,6 @@
 
 #include "minishell.h"
 
-
-
-// void	print_data(t_minishell *shell)
-// {
-// 	while (shell)
-// 	{
-// 		while (shell->redirct)
-// 		{
-// 			if (shell->redirct->type == INF)
-// 				open_infile(shell->redirct->in,shell);
-// 			if (shell->redirct->type == OUT)
-// 				open_outfile (shell->redirct->out,shell);
-// 			if (shell->redirct->type == APE)
-// 				open_append (shell->redirct->out,shell);
-// 			if (shell->redirct->type == DEL)
-// 			{
-// 				her_doc(shell->redirct->limiter,shell);
-// 			}
-				
-// 			shell->redirct = shell->redirct->next;
-// 		}
-// 		shell = shell->next;
-// 	}
-// }
-
 void	ft_print(char **s)
 {
 	int	i;
@@ -72,44 +47,52 @@ char	**parse_to_part(char *line)
 	return (s);
 }
 
-char **get_env(t_env *p)
+void    __readline__(t_env *lst)
 {
-	int i = 0;
-	int k = ft_lstsize(p);
-	char **ptr = malloc(sizeof(char *) * (k + 1));
-	while(p && i < k)
+	
+	char *buff ;
+	char *line ;
+	char **arg;
+	t_minishell *shell;
+	shell = malloc(sizeof(t_minishell));
+	while (1)
 	{
-		ptr[i] = ft_strjoin(p->key,ft_strjoin("=",p->data));
-		i++;
-		p = p->next;
-	}
-	ptr[i] = NULL;
-	return (ptr);
-}
-
-void    handle_clr(int signum)
-{
-    if (signum == SIGINT)
-    {
-        printf("\n");
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-		s = 1;
+		sig->signal = 0;
+		signal(SIGINT, handle_clr);
+		signal(SIGQUIT, SIG_IGN);
+		buff = readline("afadlane$> ");
+		if (!buff)
+		{
+			write(2, "exit\n", 5);
+			sig->signal = 0;
+			exit(0);
+		}
+		if (buff[0] == '\0')
+		{
+			free(buff);
+			continue ;
+		}
+		line = malloc(sizeof(char) * ft_strlen(buff) + (all_redric(buff) * 2) + 1); // This is the way!!
+		line = detach_rediec(buff, line); 
+		arg = parse_to_part(line); 
+		if (check_syntext(line) != 404 && line[0])
+		{
+			shell = parsing(arg);
+			__main__(lst,shell);
+		}
+		add_history(buff);
+		free(buff);
 	}
 }
 
 int	main(int ac, char **av, char **env)
 {
-	char *buff ;
-	char *line ;
-	char **arg;
 	t_env *lst = NULL;
-	// (void)ac;
-	// (void)av;
+	(void)ac;
+	(void)av;
+	sig = malloc(sizeof(t_sig));
 	char	**p;
 	int		j;
-	
 	j = 0;
 	
 	while (env[j])
@@ -119,43 +102,8 @@ int	main(int ac, char **av, char **env)
 		free(p);
 		j++;
 	}
-	//ft_lstadd_back(&lst, ft_lstnew("OLDPWD", NULL));
-	t_minishell *shell;
-	shell = malloc(sizeof(t_minishell));
-	while (ac && av)
-	{
-		signal(SIGINT, handle_clr);
-		signal(SIGQUIT, SIG_IGN);
-		buff = readline("afadlane$ > ");
-		if (!buff)
-		{
-			write(2, "exit\n", 5);
-			s = 0;
-			exit(0);
-		}
-			
-		if (buff[0] == '\0')
-		{
-			free(buff);
-			continue ;
-		}
-
-		line = malloc(sizeof(char) * ft_strlen(buff) + (all_redric(buff) * 2) + 1); // This is the way!!
-		line = detach_rediec(buff, line); 
-		arg = parse_to_part(line); 
-		if (check_syntext(line) != 404 && line[0])
-		{
-			shell = parsing(arg);
-			__main__(lst, env,shell);
-		}
-		else if (!buff[0])
-		{
-			printf("Syntext Error\n");
-			free(buff);
-		}
-		add_history(buff);
-		free(buff);
-	}
-	return (0);
+	ft_lstadd_back(&lst, ft_lstnew("OLDPWD", NULL));
+	__readline__( lst);
+	// This is the way!!
 }
 

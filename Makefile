@@ -6,14 +6,14 @@
 #    By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/03 12:04:04 by afadlane          #+#    #+#              #
-#    Updated: 2023/05/20 22:48:50 by afadlane         ###   ########.fr        #
+#    Updated: 2023/05/24 21:46:50 by afadlane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = 	minishell
 
-CFLAGS = -Wall -Werror -Wextra -I/Users/afadlane/Desktop/readline/8.2.1/include/  -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -I/Users/afadlane/Desktop/readline/8.2.1/include/  -fsanitize=address 
 
 SRC =  main.c \
 		get_next_line.c \
@@ -31,6 +31,11 @@ SRC =  main.c \
 		utils.c \
 		cmd_list.c \
 		built_in_utils.c \
+		exucution.c \
+		exutcutin_utils.c \
+		export.c \
+		libft_bonus.c \
+		utils_built_in.c \
 
 #OBJ = ${SRC:.c=.o}
 
