@@ -2,16 +2,14 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
-/*   Created: 2023/04/23 17:38:10 by marvin            #+#    #+#             */
-/*   Updated: 2023/04/23 17:38:10 by marvin           ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/22 20:49:17 by ayylaaba          #+#    #+#             */
+/*   Updated: 2023/05/22 20:49:17 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -43,11 +41,10 @@ char	*ft_strtrim_parse(char *str, char *s)
 	while (check_str(str, s[len]))
 		len--;
 	k = ft_substr(str, i, len - i + 1);
-	free(str);
 	return (k);
 }
 
-t_minishell	*parsing(char **s)
+t_minishell	*parsing(char **s, t_env *env)
 {
 	t_minishell *new;
 	t_minishell *fullshell;
@@ -58,10 +55,11 @@ t_minishell	*parsing(char **s)
 	fullshell = 0;
 	while (s[i])
 	{
-		pipe = 0;
 		if (s[i + 1])
 			pipe = PIPE;
-		new = ft_lstneww(s[i], i, pipe);
+		else
+			pipe = 0;
+		new = ft_lstneww(s[i], i, pipe, env);
 		ft_add_back(&fullshell, new);
 		i++;
 	}

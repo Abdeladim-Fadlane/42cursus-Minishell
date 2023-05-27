@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:11:29 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 19:04:07 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:28:29 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	first_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
 			execve(get_cmd(ptr, cmd[0], lst), cmd, get_env(lst));
 		}
 	}
-	close(lst->fd2[0]);
+	//close(lst->fd2[0]);
 }
 
-void	last_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
+int	last_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
 {
 	int	pid1;
 
@@ -69,18 +69,19 @@ void	last_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
 			execve(get_cmd(ptr, cmd[0], lst), cmd, get_env(lst));
 		}
 	}
+	return (pid1);
 }
 
 void	midlle_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
 {
 	int	pid1;
-
+	sig->signal = 1;
 	pid1 = fork();
 	if (pid1 == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		sig->signal = 1;
+		
 		if (__built__in__(lst, p, 0) == 0)
 			exit(0);
 		else
@@ -95,23 +96,29 @@ void	midlle_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p)
 				error(cmd[0]);
 			execve(get_cmd(ptr, cmd[0], lst), cmd, get_env(lst));
 		}
-		exit(0);
+		//exit(0);
 	}
 }
 
 void	one_command(char **ptr, char **cmd, t_minishell *p, t_env *lst)
 {
 	int	pid;
-
 	sig->signal = 1;
 	if (p->out_id > 0)
 		if (__built__in__(lst, p, 2) == 0)
-			return ;
+		{
+				sig->status = 0;
+				return ;
+		}	
 	if (__built__in__(lst, p, 1) == 0)
-		return ;
+	{
+			sig->status = 0;
+			return ;
+	}
 	pid = fork();
 	if (pid == 0)
-	{
+	{	
+		
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		if (p->out_id > 0)
@@ -120,12 +127,12 @@ void	one_command(char **ptr, char **cmd, t_minishell *p, t_env *lst)
 			dup2(p->in_id, 0);
 		else
 			dup2(lst->fd2[0], 0);
-		close(lst->fd2[0]);
-		if (get_cmd(ptr, cmd[0], lst) == NULL)
+		char *s = get_cmd(ptr, cmd[0], lst);
+		if (s == NULL)
 			error(cmd[0]);
-		execve(get_cmd(ptr, cmd[0], lst), cmd, get_env(lst));
+		execve(s, cmd, get_env(lst));
 	}
-	close(lst->fd2[0]);
+	exitstatus(pid);
 }
 
 void	main_herdoc(t_env *p, t_object *obj)

@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:24:11 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 18:55:40 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/25 18:58:05 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void    handle_clr()
 {
+    printf("\n");
     if (sig->signal == 0)
     {
-        printf("\n");
         rl_on_new_line();
         rl_replace_line("", 0);
         rl_redisplay();

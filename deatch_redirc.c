@@ -2,16 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   deatch_redirc.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
-/*   Created: 2023/04/23 14:02:45 by marvin            #+#    #+#             */
-/*   Updated: 2023/04/23 14:02:45 by marvin           ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/22 20:48:30 by ayylaaba          #+#    #+#             */
+/*   Updated: 2023/05/22 20:48:30 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "minishell.h"
 
@@ -26,7 +25,8 @@ int	all_redric(char *src)
 	count = 0;
 	while (src[i])
 	{
-		if ((src[i] == '<' && src[i + 1] == '<') || (src[i] == '>' && src[i + 1] == '>'))
+		if ((src[i] == '<' && src[i + 1] == '<') || (src[i] == '>' && src[i
+				+ 1] == '>'))
 		{
 			count++;
 			i += 2;
@@ -43,7 +43,8 @@ int	all_redric(char *src)
 			while (src[i] && src[i] != ch)
 				i++;
 		}
-		i++;
+		else
+			i++;
 	}
 	return (count);
 }
@@ -65,7 +66,7 @@ int	hande_double(char c, char *line, int i)
 	return (i);
 }
 
-char	*detach_rediec(char *str, char *line)
+void	detach_rediec(char *str, char *line)
 {
 	int i;
 	int j;
@@ -89,10 +90,8 @@ char	*detach_rediec(char *str, char *line)
 			j = handle_single(str[i], line, j);
 			i++;
 		}
-		line[j] = str[i];
-		j++;
-		i++;
+		else
+			line[j++] = str[i++];
 	}
 	line[j] = '\0';
-	return (line);
 }

@@ -13,20 +13,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
 void	ft_print(char **s)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (s[i])
 	{
-		printf ("str = %s\n", s[i]);
+		printf("str = %s\n", s[i]);
 		i++;
 	}
-	printf ("last str = %s\n", s[i]);
+	printf("last str = %s\n", s[i]);
 }
 
 char	**parse_to_part(char *line)
@@ -47,24 +46,24 @@ char	**parse_to_part(char *line)
 	return (s);
 }
 
-void    __readline__(t_env *lst)
+void	__readline__(t_env *lst)
 {
-	
-	char *buff ;
-	char *line ;
+	char *buff;
+	char *line;
 	char **arg;
 	t_minishell *shell;
-	shell = malloc(sizeof(t_minishell));
+	shell = 0;
+		
+	signal(SIGINT, handle_clr);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
-	{
+	{	
 		sig->signal = 0;
-		signal(SIGINT, handle_clr);
-		signal(SIGQUIT, SIG_IGN);
 		buff = readline("afadlane$> ");
 		if (!buff)
 		{
 			write(2, "exit\n", 5);
-			sig->signal = 0;
+			sig->status = 0;
 			exit(0);
 		}
 		if (buff[0] == '\0')
@@ -72,13 +71,18 @@ void    __readline__(t_env *lst)
 			free(buff);
 			continue ;
 		}
-		line = malloc(sizeof(char) * ft_strlen(buff) + (all_redric(buff) * 2) + 1); // This is the way!!
-		line = detach_rediec(buff, line); 
-		arg = parse_to_part(line); 
+		line = malloc((ft_strlen(buff) + 1) + (all_redric(buff) * 2)); // This is the way!!
+		detach_rediec(buff, line);
 		if (check_syntext(line) != 404 && line[0])
 		{
-			shell = parsing(arg);
-			__main__(lst,shell);
+			arg = ft_split_parse(line, '|');
+			shell = parsing(arg, lst);
+			__main__(lst, shell);
+		}
+		else
+		{
+			perror("Syntext Error");
+			exit(1);
 		}
 		add_history(buff);
 		free(buff);
@@ -88,22 +92,30 @@ void    __readline__(t_env *lst)
 int	main(int ac, char **av, char **env)
 {
 	t_env *lst = NULL;
+	char **p;
+	int j;
 	(void)ac;
 	(void)av;
 	sig = malloc(sizeof(t_sig));
-	char	**p;
-	int		j;
-	j = 0;
-	
-	while (env[j])
+
+	//shell = 0;
+	j = -1;
+	lst = 0;
+	while (++j < len_env(env))
 	{
-		p = __split__(env, j);
-		ft_lstadd_back(&lst, ft_lstnew(p[0], p[1]));
+		p = array_env(env, j);
+		ft_add_back_env(&lst, ft_lstnew_env(p[0], p[1]));
 		free(p);
-		j++;
 	}
+	// j = 0;
+	// while (env[j])
+	// {
+	// 	p = __split__(env, j);
+	// 	ft_lstadd_back(&lst, ft_lstnew(p[0], p[1]));
+	// 	free(p);
+	// 	j++;
+	// }
 	ft_lstadd_back(&lst, ft_lstnew("OLDPWD", NULL));
-	__readline__( lst);
+	__readline__(lst);
 	// This is the way!!
 }
-

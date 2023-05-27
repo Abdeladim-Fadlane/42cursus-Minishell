@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 21:58:16 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:22:46 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ void	__main__(t_env *lst, t_minishell *list)
 	pipex(p, lst, obj);
 }
 
-void	trim_pipex(t_minishell *lst, t_env *p, char **ptr)
+int	trim_pipex(t_minishell *lst, t_env *p, char **ptr)
 {
+	int pid;
+
 	pipe(p->fd);
 	first_proccess(p, ptr, lst->all_cmds, lst);
 	p->flag_fd = p->fd[0];
@@ -100,8 +102,9 @@ void	trim_pipex(t_minishell *lst, t_env *p, char **ptr)
 		}
 		lst = lst->next;
 	}
-	last_proccess(p, ptr, lst->all_cmds, lst);
+	pid = last_proccess(p, ptr, lst->all_cmds, lst);
 	close(p->flag_fd);
+	return (pid);
 }
 
 void	pipex(t_minishell *lst, t_env *p, t_object *obj)
@@ -118,6 +121,5 @@ void	pipex(t_minishell *lst, t_env *p, t_object *obj)
 	if (lstsize(lst) == 1)
 		one_command(ptr, lst->all_cmds, lst, p);
 	else
-		trim_pipex(lst, p, ptr);
-	exitstatus();
+		exitstatus(trim_pipex(lst, p, ptr));
 }

@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 22:12:39 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:38:47 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <dirent.h>
 
 # define OUT 1
 # define INF 2
@@ -37,6 +38,8 @@ typedef struct signal
 {
 	int				status;
 	int				signal;
+	int 	pid;
+	int flag;
 }					t_sig;
 
 t_sig				*sig;
@@ -81,6 +84,7 @@ typedef struct shell
 	int				in_id;
 	int				out_id;
 	int				pid;
+	char **s1;
 }					t_minishell;
 
 typedef struct env
@@ -98,47 +102,65 @@ typedef struct env
 
 }					t_env;
 
-char				**pass_cmds(t_cmd *cmd);
-void				ft_print(char **s);
-void				ft_free(char **strs);
-t_minishell			*parsing(char **line);
-t_minishell			*ft_lstneww(char *s, int i, int pipe);
-void				ft_add_back(t_minishell **lst, t_minishell *addnew);
-t_redir				*ft_lastt(t_redir *lst);
-t_minishell			*ft_last_shell(t_minishell *lst);
-void				add_redir(t_redir **lst, t_redir *new);
-t_redir				*new_redir(t_content *content);
-t_content			*pars_w(char *s, int type);
-char				*charge_str(char c, char *src);
-char				*expand(char *s, int type, char *str);
-void				go_to_parse(char **s, t_minishell *new);
-char				*detach_rediec(char *str, char *line);
-char				**ft_split_parse(char *str, char c);
-char				**ft_charge(char **src, char *s1, char c);
-char				*full_charge(char *s, char c);
-int					word_len(char *s, char c);
-int					count_strs(char *str, char c);
-int					ft_strlen(const char *s);
-int					all_redric(char *src);
-char				*detach_rediec(char *str, char *line);
-int					handle_single(char c, char *line, int i);
-int					hande_double(char c, char *line, int i);
-int					count_char(char *str, char c);
-int					check_qouts(char *line, char c);
-int					check_redir(char *s);
-int					handle_pipe(char *str);
-int					check_syntext(char *line);
-char				**parse_to_part(char *line);
-void				add_back_cmd(t_cmd **cmd, t_cmd *new);
-t_cmd				*ft_last_cmd(t_cmd *cmd);
-t_cmd				*new_cmd(char *str);
+void	ft_add_back_env(t_env **lst, t_env *new);
+t_env	*ft_last_env(t_env **list);
+t_env	*ft_lstnew_env(char *s1, char *s2);
+int		len_env(char **en);
+char	**array_env(char **env, int j);
+char	*ft_strcpy(char *dest, char *src);
+char	*env_value(char *s1, char* str, t_env *env, int *i);
+///
+void		ft_print(char **s);
+ int			aft_strrchr(const char *s, char c);
+void		ft_free(char **strs);
+t_minishell	*parsing(char **line, t_env *env);
+// char		*ft_strjoin(char *s1, char *s2);
+t_minishell	*ft_lstneww(char *s, int i, int pipe, t_env *env);
+void		ft_add_back(t_minishell **lst, t_minishell *addnew);
+t_redir		*ft_last(t_redir *lst);
+t_minishell	*ft_last_shell(t_minishell *lst);
+void		add_redir(t_redir **lst, t_redir *new);
+t_redir		*new_redir(t_content *content);
+t_content	*pars_w(char *s, int type, t_env *env, int j);
+t_cmd		*new_cmd(char *str);
+t_cmd		*ft_last_cmd(t_cmd *cmd);
+void		add_back_cmd(t_cmd **cmd, t_cmd *new);
+int			count_cmd(t_cmd *cmd);
+char		**pass_cmds(t_cmd *cmd);
+void		add_back_cmd(t_cmd **cmd, t_cmd *new);
+char	*charge_str(char c, char *src);
+char	*expand(char *s, char *str, t_env *env, int j);
+void	go_to_parse(char **s, t_minishell *new, t_env *env);
+char	**ft_split_parse(char *str, char c);
+char	**ft_charge(char **s, char *s1, char c);
+char	*full_charge(char *s, char c);
+int	word_len(char *s, char c);
+int	count_strs(char *str, char c);
+// int	ft_strlen(char *s);
+int	all_redric(char *src);
+void	detach_rediec(char *str, char *line);
+int	handle_single(char c, char *line, int i);
+int	hande_double(char c, char *line, int i);
+int	count_char(char *str, char c);
+int	check_qouts(char *line, char c);
+int	check_redir(char *s);
+int	handle_pipe(char *str);
+int	check_syntext(char *line);
+// char	*ft_strdup(char *source);
+// char	*ft_substr(char *s, unsigned int start, size_t len);
+// char	*ft_strtrim(char *s1, char *set);
+// char	*ft_substr(char *s, unsigned int start, size_t len);
+void	ft_free_v2(char **s, int j);
+int	check_redir_v2(char *s);
+int	content_count(char **s);
+
+
 
 void				first_proccess(t_env *lst, char **ptr, char **cmd,
 						t_minishell *p);
 void				midlle_proccess(t_env *lst, char **ptr, char **cmd,
 						t_minishell *p);
-void				last_proccess(t_env *lst, char **ptr, char **cmd,
-						t_minishell *p);
+int					last_proccess(t_env *lst, char **ptr, char **cmd, t_minishell *p);
 void				one_command(char **ptr, char **cmd, t_minishell *p,
 						t_env *lst);
 void				main_herdoc(t_env *p, t_object *obj);
@@ -174,7 +196,7 @@ void				__print__export__(t_env *p, int k, int fd, int fdd);
 void				__unset__(t_env *lst, t_minishell *ptr);
 void				__readline__(t_env *lst);
 void				main_herdoc(t_env *p, t_object *obj);
-void				exitstatus(void);
+void				exitstatus(int pid);
 void				error(char *s);
 char				*check_env(t_env *p);
 void				open_append(char *s, t_minishell *lst);

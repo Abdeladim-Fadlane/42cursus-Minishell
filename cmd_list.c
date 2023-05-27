@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 16:22:14 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/11 15:08:30 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/14 14:08:53 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,13 @@ char	**pass_cmds(t_cmd *cmd)
 	int		i;
 
 	i = 0;
-	//printf ("i am here == %d\n", count_cmd(cmd));
 	cmds = malloc(sizeof(char *)*(count_cmd(cmd) + 1));
 	if (!cmds)
 		return 0;
 	while (cmd)
 	{
 		cmds[i++] = cmd->cmd;
-		cmd = cmd->next;		
+		cmd = cmd->next;
 	}
 	cmds[i] = NULL;
     return (cmds);

@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:50:00 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 16:18:47 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/27 14:16:53 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,25 @@ char	**get_env(t_env *p)
 	return (ptr);
 }
 
-void	exitstatus(void)
+void	exitstatus(int pid)
 {
 	int	h;
 
-	while (waitpid(-1, &h, 0) != -1)
+	waitpid(pid, &h, 0);
+	while (waitpid(-1, NULL, 0) != -1)
+		;
+	if (WIFEXITED(h))
+		sig->status = WEXITSTATUS(h);
+	
+	if(WIFSIGNALED(h))
 	{
-		WEXITSTATUS(h);
-		sig->status = h;
-		if(WIFSIGNALED(h))
+		if(WTERMSIG(h) == 3)
 		{
-			if(WTERMSIG(h) == 3)
-			{
-				write(1,"Quit: 3\n",9);
-				sig->status = 131;
-			}
-			if(WTERMSIG(h) == 2)
-			 	sig->status = 130;
+			write(1,"Quit: 3\n",9);
+			sig->status = 131;
 		}
+		if(WTERMSIG(h) == 2)
+		 	sig->status = 130;
 	}
 }
 
@@ -79,7 +80,14 @@ char	*get_cmd(char **ptr, char *lst, t_env *p)
 	i = 0;
 	l = 0;
 	buff = "";
-	if (access(lst, F_OK) == 0)
+	//DIR *dir = opendir(lst);
+	if(opendir(lst) != NULL)
+	{
+		write(2,lst, ft_strlen(lst));
+		write(2, ": is a directory\n", 18);
+		exit(126);
+	}
+	if (access(lst,0 ) == 0)
 		return (lst);
 	if (check_env(p) == NULL)
 	{
@@ -89,9 +97,9 @@ char	*get_cmd(char **ptr, char *lst, t_env *p)
 	}
 	while (ptr[i])
 	{
-		buff = ft_strjoin(ptr[i], "/");
-		buff = ft_strjoin(buff, lst);
-		if (access(buff, F_OK) == 0)
+		
+		buff = ft_strjoin(ptr[i], ft_strjoin("/", lst));
+		if (access(buff, X_OK) == 0)
 			return (buff);
 		free(buff);
 		i++;

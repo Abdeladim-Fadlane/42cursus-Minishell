@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:23 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 22:05:38 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:17:04 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	__echo__(t_minishell *lst, int k, int fd, int fdd)
 			write(1, "\n", 1);
 		return ;
 	}
-	if (ft_strcmp(lst->all_cmds[1], "$?") == 0)
+	if (ft_strcmp(lst->all_cmds[1], "t?") == 0)
 	{
 		printf("%d\n", sig->status);
 		return ;
@@ -96,6 +96,7 @@ void	get_index_pwd(t_env *lst, char *path, char *s)
 		p = p->next;
 	}
 }
+
 char	*get_user(t_env *lst)
 {
 	while (lst)
@@ -142,10 +143,9 @@ int	__built__in__(t_env *lst, t_minishell *list, int i)
 		exit(0);
 	}
 	else if (ft_strcmp(list->all_cmds[0], "unset") == 0
-			|| ft_strcmp(list->all_cmds[0], "UNSET") == 0)
+			|| ft_strcmp(list->all_cmds[0], "UNSET") == 0)//This is the way !!
 		__unset__(lst, list);
 	else
 		return (1);
 	return (0);
-	//This is the way !!
 }
