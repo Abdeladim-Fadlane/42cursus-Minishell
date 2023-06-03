@@ -6,79 +6,11 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:23 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/26 15:17:04 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/03 14:41:43 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-
-void	__echo__(t_minishell *lst, int k, int fd, int fdd)
-{
-	int	i;
-
-	i = 1;
-	if (lst->all_cmds[1] == NULL)
-	{
-		if (fdd > 0)
-			write(fdd, "\n", 1);
-		if (k == 0)
-			write(fd, "\n", 1);
-		else
-			write(1, "\n", 1);
-		return ;
-	}
-	if (ft_strcmp(lst->all_cmds[1], "t?") == 0)
-	{
-		printf("%d\n", sig->status);
-		return ;
-	}
-	if (ft_strcmp(lst->all_cmds[1], "-n") == 0 && lst->all_cmds[1] == NULL)
-		return ;
-	else
-	{
-		while (ft_strcmp(lst->all_cmds[i], "-n") == 0)
-			i++;
-		while (lst->all_cmds[i])
-		{
-			if (fdd > 0)
-			{
-				put_str(lst->all_cmds[i], fdd);
-				if (lst->all_cmds[i + 1] != NULL)
-					write(fdd, " ", 2);
-			}
-			else if (k == 0)
-			{
-				put_str(lst->all_cmds[i], fd);
-				if (lst->all_cmds[i + 1] != NULL)
-					write(fd, " ", 2);
-			}
-			else
-			{
-				put_str(lst->all_cmds[i], 1);
-				if (lst->all_cmds[i + 1] != NULL)
-					write(1, " ", 2);
-			}
-			i++;
-		}
-	}
-	if (fdd > 0)
-	{
-		if (ft_strcmp(lst->all_cmds[1], "-n") != 0)
-			write(fdd, "\n", 1);
-	}
-	else if (k == 0)
-	{
-		if (ft_strcmp(lst->all_cmds[1], "-n") != 0)
-			write(fd, "\n", 1);
-	}
-	else
-	{
-		if (ft_strcmp(lst->all_cmds[1], "-n") != 0)
-			write(1, "\n", 1);
-	}
-}
 
 void	get_index_pwd(t_env *lst, char *path, char *s)
 {
@@ -108,8 +40,53 @@ char	*get_user(t_env *lst)
 	return (NULL);
 }
 
+void	ft_exit(t_minishell *list)
+{
+	if (ft_strcmp(list->all_cmds[0], "exit") == 0
+		|| ft_strcmp(list->all_cmds[0], "EXIT") == 0)
+	{
+		printf("exit\n");
+		if (list->all_cmds[1] == NULL)
+			exit(0);
+		if ((ft_atoi(list->all_cmds[1]) == 0 && list->all_cmds[1][0] != '0'))
+		{
+			write(2, "afadlane$: numeric argument required\n", 38);
+			exit(255);
+		}
+		if (list->all_cmds[1] != NULL)
+			exit(ft_atoi(list->all_cmds[1]));
+	}
+}
+
+void	ft_export(t_env *lst, t_minishell *list, int i)
+{
+	__add__to__export__(lst, list);
+	if (list->all_cmds[1] == NULL)
+		__print__export__(lst, i, lst->fd[1], list->out_id);
+}
+
+int	ft_env(t_env *lst, t_minishell *list, int i)
+{
+	g_sig->sst = 0;
+	if (list->all_cmds[1] != NULL)
+	{
+		write(2, "env: with no options or arguments\n", 35);
+		g_sig->sst = 127;
+		return (0);
+	}
+	if (check_env(lst) == NULL)
+	{
+		write(2, "env: No such file or directory\n", 31);
+		g_sig->sst = 127;
+		return (0);
+	}
+	__print__env__(lst, i, lst->fd[1], list->out_id);
+	return (1);
+}
+
 int	__built__in__(t_env *lst, t_minishell *list, int i)
 {
+	ft_exit(list);
 	if (ft_strcmp(list->all_cmds[0], "pwd") == 0 || ft_strcmp(list->all_cmds[0],
 			"PWD") == 0)
 		__pwd__(i, lst->fd[1], list->out_id);
@@ -120,30 +97,12 @@ int	__built__in__(t_env *lst, t_minishell *list, int i)
 		__echo__(list, i, lst->fd[1], list->out_id);
 	else if (ft_strcmp(list->all_cmds[0], "env") == 0
 			|| ft_strcmp(list->all_cmds[0], "ENV") == 0)
-	{
-		if (check_env(lst) == NULL)
-		{
-			write(2, "env: No such file or directory\n", 31);
-			return (0);
-		}
-		__print__env__(lst, i, lst->fd[1], list->out_id);
-	}
+		ft_env(lst, list, i);
 	else if (ft_strcmp(list->all_cmds[0], "export") == 0
 			|| ft_strcmp(list->all_cmds[0], "EXPORT") == 0)
-	{
-		__add__to__export__(lst, list);
-		if (list->all_cmds[1] == NULL)
-			__print__export__(lst, i, lst->fd[1], list->out_id);
-	}
-	else if (ft_strcmp(list->all_cmds[0], "exit") == 0
-			|| ft_strcmp(list->all_cmds[0], "EXIT") == 0)
-	{
-		printf("exit\n");
-		sig->status = 0;
-		exit(0);
-	}
+		ft_export(lst, list, i);
 	else if (ft_strcmp(list->all_cmds[0], "unset") == 0
-			|| ft_strcmp(list->all_cmds[0], "UNSET") == 0)//This is the way !!
+			|| ft_strcmp(list->all_cmds[0], "UNSET") == 0)
 		__unset__(lst, list);
 	else
 		return (1);

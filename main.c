@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/26 17:22:46 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:33:13 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,24 @@ void	strim_her_doc(char *s, char *buff)
 		exit(0);
 }
 
+int		check_delmiter(char	*h)
+{
+	int		i;
+	char 	*str;
+
+	str = ft_strtrim(h, " ");
+	i = 0;
+	if ((str[0] == '\"' && str[strlen(h) - 1] == '\"') || (str[0] == '\'' && str[strlen(h) - 1] == '\''))
+		return 1;
+	return 0;
+}
+
 void	her_doc(char *s, t_env *p)
 {
 	int		pid;
 	char	*buff;
 
-	sig->signal = 1;
+	g_sig->signal = 1;
 	pipe(p->fd2);
 	pid = fork();
 	if (pid == 0)
@@ -37,6 +49,8 @@ void	her_doc(char *s, t_env *p)
 		while (1)
 		{
 			buff = readline(">");
+			if (g_sig->dude == 1)
+				buff = expand(buff, ft_strdup(""), p, 0);
 			strim_her_doc(s, buff);
 			if (buff[0] == '\0')
 			{
@@ -49,7 +63,7 @@ void	her_doc(char *s, t_env *p)
 	}
 	close(p->fd2[1]);
 	wait(NULL);
-	sig->signal = 0;
+	g_sig->signal = 0;
 }
 
 void	__main__(t_env *lst, t_minishell *list)
@@ -79,14 +93,15 @@ void	__main__(t_env *lst, t_minishell *list)
 		list = list->next;
 	}
 	pipex(p, lst, obj);
+
 }
 
-int	trim_pipex(t_minishell *lst, t_env *p, char **ptr)
+int	trim_pipex(t_minishell *lst, t_env *p)
 {
 	int pid;
 
 	pipe(p->fd);
-	first_proccess(p, ptr, lst->all_cmds, lst);
+	first_proccess(p,lst->all_cmds, lst);
 	p->flag_fd = p->fd[0];
 	close(p->fd[1]);
 	lst = lst->next;
@@ -95,23 +110,21 @@ int	trim_pipex(t_minishell *lst, t_env *p, char **ptr)
 		if (lst->pipe == 1)
 		{
 			pipe(p->fd);
-			midlle_proccess(p, ptr, lst->all_cmds, lst);
+			midlle_proccess(p, lst->all_cmds, lst);
 			close(p->fd[1]);
 			close(p->flag_fd);
 			p->flag_fd = p->fd[0];
 		}
 		lst = lst->next;
 	}
-	pid = last_proccess(p, ptr, lst->all_cmds, lst);
+	pid = last_proccess(p, lst->all_cmds, lst);
 	close(p->flag_fd);
 	return (pid);
 }
 
 void	pipex(t_minishell *lst, t_env *p, t_object *obj)
 {
-	char	**ptr;
-
-	ptr = ft_split(check_env(p), ':');
+	g_sig->flag = 0;
 	if (p->n >= 1)
 	{
 		main_herdoc(p, obj);
@@ -119,7 +132,7 @@ void	pipex(t_minishell *lst, t_env *p, t_object *obj)
 			return ;
 	}
 	if (lstsize(lst) == 1)
-		one_command(ptr, lst->all_cmds, lst, p);
+		one_command(lst->all_cmds, lst, p);
 	else
-		exitstatus(trim_pipex(lst, p, ptr));
+		exitstatus(trim_pipex(lst, p));
 }

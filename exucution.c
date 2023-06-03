@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:50:00 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/27 14:16:53 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/29 21:36:15 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,17 @@ void	exitstatus(int pid)
 	while (waitpid(-1, NULL, 0) != -1)
 		;
 	if (WIFEXITED(h))
-		sig->status = WEXITSTATUS(h);
+		g_sig->status = WEXITSTATUS(h);
 	
 	if(WIFSIGNALED(h))
 	{
 		if(WTERMSIG(h) == 3)
 		{
 			write(1,"Quit: 3\n",9);
-			sig->status = 131;
+			g_sig->status = 131;
 		}
 		if(WTERMSIG(h) == 2)
-		 	sig->status = 130;
+		 	g_sig->status = 130;
 	}
 }
 
@@ -71,40 +71,18 @@ void	error(char *s)
 	exit(127);
 }
 
-char	*get_cmd(char **ptr, char *lst, t_env *p)
+char *	ffree(char **strs,char *s)
 {
-	int		l;
-	int		i;
-	char	*buff;
+	int	i;
 
 	i = 0;
-	l = 0;
-	buff = "";
-	//DIR *dir = opendir(lst);
-	if(opendir(lst) != NULL)
+	while (strs[i])
 	{
-		write(2,lst, ft_strlen(lst));
-		write(2, ": is a directory\n", 18);
-		exit(126);
-	}
-	if (access(lst,0 ) == 0)
-		return (lst);
-	if (check_env(p) == NULL)
-	{
-		write(2, lst, ft_strlen(lst));
-		write(2, ": No such file or directory\n", 28);
-		exit(127);
-	}
-	while (ptr[i])
-	{
-		
-		buff = ft_strjoin(ptr[i], ft_strjoin("/", lst));
-		if (access(buff, X_OK) == 0)
-			return (buff);
-		free(buff);
+		free(strs[i]);
 		i++;
 	}
-	return (NULL);
+	free(strs);
+	return (s);
 }
 
 char	*check_env(t_env *p)

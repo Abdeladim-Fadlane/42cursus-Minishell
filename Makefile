@@ -6,7 +6,7 @@
 #    By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/03 12:04:04 by afadlane          #+#    #+#              #
-#    Updated: 2023/05/27 14:22:31 by afadlane         ###   ########.fr        #
+#    Updated: 2023/05/30 17:06:43 by afadlane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,26 +37,33 @@ SRC =  main.c \
 		utils_built_in.c \
 		ft_strjoin.c \
 		envirment.c \
+		echo.c \
+		get_cmd.c \
+		export_utils.c
 
-#OBJ = ${SRC:.c=.o}
+ #OBJ = ${SRC:.c=.o}
 
 all :${NAME} 
-
-run : ${NAME}
-		@./${NAME} 
-		
+	
+	
 ./libft/libft.a :
 	@make -C ./libft
 
 ${NAME}: ./libft/libft.a ${SRC} 
 	 	@cc ${CFLAGS} ${SRC} ./libft/libft.a  -L/Users/afadlane/Desktop/readline/8.2.1/lib/ -lreadline   -o ${NAME}
+		
+# .o : .c
+# 	${cc} $(CFLAGS) -c $^ 
+
 clean :
-		@rm -f ${OBJ} 
+		@rm -f ${OBJ}
 
 fclean : clean
 		@rm -f ${NAME}
-
+		
+# rm -rf ./libft/libft.a 
 nor:
 	norminette
 
 re : fclean all 
+	

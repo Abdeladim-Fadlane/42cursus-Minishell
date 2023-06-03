@@ -6,11 +6,22 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 21:20:21 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 22:05:43 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:49:39 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	exit_home(t_env *lst)
+{
+	while (lst)
+	{
+		if (ft_strcmp(lst->key, "HOME") == 0)
+			return (0);
+		lst = lst->next;
+	}
+	return (1);
+}
 
 void	__cd__(char *str, t_env *p)
 {
@@ -20,17 +31,30 @@ void	__cd__(char *str, t_env *p)
 	char	*s;
 
 	s = getcwd(pathh, sizeof(pathh));
+	if (!str && exit_home(p) == 1)
+	{
+		write(2, "afadlane$: cd : HOME not set\n", 30);
+		g_sig->sst = 1;
+	}
 	if (!str)
 	{
 		if (chdir(ft_strjoin("/Users/", ft_strjoin("/", get_user(p)))) != 0)
+		{
 			perror("cd ");
+			g_sig->sst = 1;
+		}
 		get_index_pwd(p, getcwd(path, sizeof(path)), s);
 	}
+	else if (ft_strcmp(s, str) == 0)
+		return ;
 	else
 	{
 		buff = getcwd(path, sizeof(path));
 		if (chdir(ft_strjoin(buff, ft_strjoin("/", str))) != 0)
+		{
+			g_sig->sst = 1;
 			perror("cd ");
+		}
 		get_index_pwd(p, getcwd(path, sizeof(path)), s);
 	}
 }
@@ -67,6 +91,8 @@ void	__unset__(t_env *lst, t_minishell *ptr)
 	{
 		while (ptr->all_cmds[i])
 		{
+			if (check_erorrs(ptr->all_cmds[i]) == 1)
+				return ;
 			if (ft_strcmp(lst->next->key, ptr->all_cmds[i]) == 0)
 			{
 				tmp = lst->next->next;
@@ -110,7 +136,7 @@ void	__pwd__(int k, int fd, int fd_out)
 
 void	put_str(char *s, int fd)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (s[i])

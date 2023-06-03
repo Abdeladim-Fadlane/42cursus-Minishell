@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:56:43 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/26 14:47:28 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/05/29 16:59:54 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	ft_intial_new(t_minishell *new, int index, int pipe, char **str)
 		exit(1);
 	new->redirct = 0;
 	new->cmd = 0;
+	g_sig->dude = 0;
 	new->pipe = pipe;
 	new->next = NULL;
 	new->index = index;
@@ -72,7 +73,11 @@ t_minishell	*ft_lstneww(char *s, int index, int pipe, t_env *env)
 		else if (!ft_strcmp(new->s1[i], ">"))
 			add_redir(&new->redirct, new_redir(pars_w(str[++i], OUT, env, 0)));
 		else if (!ft_strcmp(new->s1[i], "<<"))
-			add_redir(&new->redirct, new_redir(pars_w(str[++i], DEL, env, 1))); // we don't need to expand what after delimiter that's why i useed last arg 1 
+		{
+			if (check_delmiter(str[i + 1]) == 0)
+				g_sig->dude = 1;
+			add_redir(&new->redirct, new_redir(pars_w(str[++i], DEL, env, 1))); // we don't need to expand what after delimiter that's why i useed last arg 1
+		}
 		else if (!ft_strcmp(new->s1[i], ">>"))
 			add_redir(&new->redirct, new_redir(pars_w(str[++i], APE, env, 0)));
 		else if (check_redir_v2(content->content) == 1)

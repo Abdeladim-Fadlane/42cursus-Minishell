@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_4.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:57:52 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/25 16:36:46 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/05/29 18:13:23 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,13 @@ char	*env_value(char *s1, char *str, t_env *env, int *i)
 	s3 = NULL;
 	k = 0;
 
+	if (s1[0] == '$' && s1[1] == '?')
+	{
+		s2 = ft_itoa(g_sig->status);
+		s3 = ft_strjoin(str, s2);
+		*i += 2;
+		return (s3);
+	}
 	while (s1[k] && is_valid(s1[k]))
 		k++;
 	*i += k;
@@ -102,7 +109,6 @@ char	*env_value(char *s1, char *str, t_env *env, int *i)
 	if (k != 1)
 		s2 = ft_strdup("");
 	s3 = ft_strjoin(str, s2);
-
 	return (s3);
 }
 
@@ -122,9 +128,7 @@ char	*expand(char *s, char *str, t_env *env, int j)
 	while (s[i])
 	{
 		if (s[i] == '$' && s[i + 1] == '?')
-			
-		if ((s[i] == '$' && !s[i + 1]) || ft_strrchr(s + i, ' '))
-			str = charge_str(s[i], str);
+			str = env_value(s + i, str, env, &i);
 		if (s[i] == '\'' && d == 0 && ss == 0)
 			ss = 1;
 		else if (s[i] == '\'' && d == 0 && ss == 1)
@@ -133,7 +137,13 @@ char	*expand(char *s, char *str, t_env *env, int j)
 			d = 1;
 		else if (s[i] == '\"' && ss == 0 && d == 1)
 			d = 0;
-		if (s[i] == '$' && ss == 0 && j != 1) // we Don't expand if the env varible come after delmiter(j != 1) and if befor env varible ' .
+		if ((s[i] == '$' && !s[i + 1]) || ft_strrchr(s + i, ' '))
+			str = charge_str(s[i++], str);
+		else if (s[i] == '$' && !is_valid(s[i + 1]))
+			str = charge_str(s[i++], str);
+		else if (s[i] == '$' && ft_isdigit(s[i + 1]) == 1)
+			i++;
+		else if (s[i] == '$' && ss == 0 && j != 1) // we Don't expand if the env varible come after delmiter(j != 1) and if befor env varible ' .
 			str = env_value(s + ++i, str, env, &i);
 		else
 			str = charge_str(s[i++], str);

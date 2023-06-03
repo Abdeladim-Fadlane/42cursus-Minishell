@@ -15,7 +15,6 @@
 
 #include "minishell.h"
 
-
 int	count_char(char *str, char c)
 {
 	int i;
@@ -29,6 +28,7 @@ int	count_char(char *str, char c)
 			count++;
 		i++;
 	}
+
 	return (count);
 }
 
