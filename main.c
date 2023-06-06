@@ -6,7 +6,7 @@
 /*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/06 17:02:55 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:53:38 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,15 @@ void	her_doc(char *s, t_env *p)
 		while (1)
 		{
 			buff = readline(">");
+			
 			if (g_sig->dude == 1)
+			{
+				printf("buff = %s\n",buff);
 				buff = expand(buff, ft_strdup(""), p, 0);
+			}
+				
 			strim_her_doc(s, buff);
+			printf("----%s\n",buff);
 			if (buff[0] == '\0')
 			{
 				free(buff);
@@ -70,7 +76,7 @@ void	__main__(t_env *lst, t_minishell *list)
 {
 	t_minishell	*p;
 	t_object	*obj;
-	t_redir		*new;
+	//t_redir		*new;
 
 	p = list;
 	obj = NULL;
@@ -94,11 +100,11 @@ void	__main__(t_env *lst, t_minishell *list)
 			{
 				t_lstadd_back(&obj, t_lstnew(list->redirct->limiter));
 				lst->n = 1;
-				free(list->redirct->limiter);
+				//free(list->redirct->limiter);
 			}
-			new = list->redirct;
+			//new = list->redirct;
 			list->redirct = list->redirct->next;
-			free (list->redirct);
+			//free (list->redirct);
 		}
 		list = list->next;
 	}
