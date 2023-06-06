@@ -3,99 +3,97 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:56:43 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/29 16:59:54 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:02:36 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_redir_v2(char *s)
+// int	ft_strcmp(char *s1, char *s2)
+// {
+// 	int				i;
+// 	unsigned char	*src1;
+// 	unsigned char	*src2;
+
+// 	src1 = (unsigned char *)s1;
+// 	src2 = (unsigned char *)s2;
+// 	i = 0;
+// 	while ((src1[i] || src2[i]))
+// 	{
+// 		if (src1[i] != src2[i])
+// 			return (src1[i] - src2[i]);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+void	delmi_app(t_minishell **new, char **s, char *str, t_env *env)
 {
-	int	i;
-
-	i = 0;
-	if (ft_strcmp(s, "<") || ft_strcmp(s, "<<") || ft_strcmp(s, "<")
-		|| ft_strcmp(s, "<<"))
-		return (1);
-	return (0);
-}
-
-int	content_count(char **s)
-{
-	int	i;
-	int	count;
-
-	count = 0;
-	i = 0;
-	while (s[i])
+	if (!ft_strcmp(*s, "<"))
 	{
-		count++;
-		i++;
+		add_redir(&(*new)->redirct, new_redir(pars_w(str, INF, env, 0)));
 	}
-	return (count);
+	else if (!ft_strcmp(*s, ">"))
+	{
+		add_redir(&(*new)->redirct, new_redir(pars_w(str, OUT, env, 0)));
+	}
+	else if (!ft_strcmp(*s, "<<"))
+	{
+		add_redir(&(*new)->redirct, new_redir(pars_w(str, DEL, env, 1)));
+	}
+	else if (!ft_strcmp(*s, ">>"))
+	{
+		add_redir(&(*new)->redirct, new_redir(pars_w(str, APE, env, 0)));
+	}
 }
 
-void	ft_intial_new(t_minishell *new, int index, int pipe, char **str)
+void	ft_intial_new(t_minishell **new, int index, int pipe, char **s)
 {
-	new->s1 = malloc(sizeof(char *) * content_count(str) + 1);
-	if (!new->s1)
+	(*new) = malloc(sizeof(t_minishell));
+	if (!*new)
+		return ;
+	(*new)->str = ft_split_parse(*s, ' ');
+	if (!(*new)->str)
+		return ;
+	(*new)->s1 = malloc(sizeof(char *) * content_count((*new)->str) + 1);
+	if (!(*new)->s1)
 		exit(1);
-	new->redirct = 0;
-	new->cmd = 0;
-	g_sig->dude = 0;
-	new->pipe = pipe;
-	new->next = NULL;
-	new->index = index;
+	(*new)->redirct = 0;
+	(*new)->cmd = 0;
+	(*new)->pipe = pipe;
+	(*new)->index = index;
+	(*new)->next = NULL;
 }
 
 t_minishell	*ft_lstneww(char *s, int index, int pipe, t_env *env)
 {
 	t_minishell	*new;
 	t_content	*content;
-	char		**str;
+	char		*str1;
 	int			i;
 
-	new = malloc(sizeof(t_minishell));
-	i = 0;
-	str = ft_split_parse(s, ' ');
-	ft_intial_new(new, index, pipe, str);
-	if (!str)
-		exit(1);
-	while (str[i])
+	i = -1;
+	ft_intial_new(&new, index, pipe, &s);
+	while (new->str[++i])
 	{
-		content = pars_w(str[i], 0, env, 0); // to expand if we need to like exmple (s1[i] == $USER --> ayylaaba).
+		content = pars_w(new->str[i], 0, env, 0);
 		new->s1[i] = content->content;
-		if (!ft_strcmp(new->s1[i], "<"))
-			add_redir(&new->redirct, new_redir(pars_w(str[++i], INF, env, 0)));
-		else if (!ft_strcmp(new->s1[i], ">"))
-			add_redir(&new->redirct, new_redir(pars_w(str[++i], OUT, env, 0)));
-		else if (!ft_strcmp(new->s1[i], "<<"))
+		if (!ft_strcmp(new->s1[i], ">>") || !ft_strcmp(new->s1[i], "<<") || \
+			!ft_strcmp(new->s1[i], "<") || !ft_strcmp(new->s1[i], ">"))
 		{
-			if (check_delmiter(str[i + 1]) == 0)
-				g_sig->dude = 1;
-			add_redir(&new->redirct, new_redir(pars_w(str[++i], DEL, env, 1))); // we don't need to expand what after delimiter that's why i useed last arg 1
+			str1 = ft_strdup(new->s1[i]);
+			free(new->s1[i]);
+			delmi_app(&new, &str1, new->str[++i], env);
+			free(str1);
 		}
-		else if (!ft_strcmp(new->s1[i], ">>"))
-			add_redir(&new->redirct, new_redir(pars_w(str[++i], APE, env, 0)));
 		else if (check_redir_v2(content->content) == 1)
 			add_back_cmd(&new->cmd, new_cmd(content->content));
 		free(content);
-		i++;
 	}
-	new->all_cmds = pass_cmds(new->cmd); // we store all cmds to each token if we find it.
-	//ft_free(new->s1);
-	ft_free(str);
-	return (new);
-}
-
-t_minishell	*ft_last_shell(t_minishell *lst)
-{
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	return (ft_free(new->str), new->all_cmds = pass_cmds(new->cmd), new);
 }
 
 void	ft_add_back(t_minishell **lst, t_minishell *addnew)

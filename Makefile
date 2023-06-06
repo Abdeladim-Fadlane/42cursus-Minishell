@@ -3,18 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+         #
+#    By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/03 12:04:04 by afadlane          #+#    #+#              #
-#    Updated: 2023/05/30 17:06:43 by afadlane         ###   ########.fr        #
+#    Updated: 2023/06/06 16:26:35 by ayylaaba         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 	minishell
 
-CFLAGS = -Wall -Wextra -Werror -I/Users/afadlane/Desktop/readline/8.2.1/include/  #-fsanitize=address 
 
-SRC =  main.c \
+CFLAGS = -Wall -Wextra -Werror -I /Users/ayylaaba/.brew/Cellar/readline/8.2.1/include  #-fsanitize=address 
+
+SRC = 	main.c \
 		get_next_line.c \
 		built_in.c \
 		minishell_utills.c\
@@ -35,22 +36,24 @@ SRC =  main.c \
 		export.c \
 		libft_bonus.c \
 		utils_built_in.c \
-		ft_strjoin.c \
 		envirment.c \
 		echo.c \
 		get_cmd.c \
+		final_utils.c \
+		ft_strjoinn.c \
+		ft_itoa.c \
 		export_utils.c
 
  #OBJ = ${SRC:.c=.o}
 
 all :${NAME} 
-	
+
 	
 ./libft/libft.a :
 	@make -C ./libft
 
 ${NAME}: ./libft/libft.a ${SRC} 
-	 	@cc ${CFLAGS} ${SRC} ./libft/libft.a  -L/Users/afadlane/Desktop/readline/8.2.1/lib/ -lreadline   -o ${NAME}
+	 	@cc ${CFLAGS}  ${SRC} ./libft/libft.a -L/Users/ayylaaba/.brew/Cellar/readline/8.2.1/lib  -lreadline -o ${NAME}
 		
 # .o : .c
 # 	${cc} $(CFLAGS) -c $^ 
@@ -66,4 +69,3 @@ nor:
 	norminette
 
 re : fclean all 
-	

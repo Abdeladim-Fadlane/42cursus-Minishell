@@ -2,21 +2,24 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/19 20:22:41 by marvin            #+#    #+#             */
-/*   Updated: 2023/04/19 20:22:41 by marvin           ###   ########.fr       */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
+/*   Created: 2023/05/22 20:49:30 by ayylaaba          #+#    #+#             */
+/*   Updated: 2023/05/22 20:49:30 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char	*ft_strdup(const char *source)
+// char	*ft_strdup(char *source)
 // {
-// 	char	*mem;
 // 	int		i;
-	
+// 	char	*mem;
+
 // 	i = 0;
 // 	mem = malloc((ft_strlen(source) + 1) * sizeof(char));
 // 	if (!mem)
@@ -30,17 +33,17 @@
 // 	return (mem);
 // }
 
-// int ft_strlen(const char *s)
+// int	ft_strlen(char *s)
 // {
-//     int i;
+// 	int	i;
 
-//     i = 0;
-//     while (s[i])
-//         i++;
-//     return i;
+// 	i = 0;
+// 	while (s && s[i])
+// 		i++;
+// 	return (i);
 // }
 
-// char	*ft_substr(char const *s, unsigned int start, size_t len)
+// char	*ft_substr(char *s, unsigned int start, size_t len)
 // {
 // 	char	*mem;
 // 	size_t	lengthstring;
@@ -63,8 +66,7 @@
 // 	return (mem);
 // }
 
-
-int	check(char const *set, char s)
+int	check(char *set, char s)
 {
 	int	i;
 
@@ -78,34 +80,26 @@ int	check(char const *set, char s)
 	return (0);
 }
 
-// char	*ft_strtrim(char *s1, char *set)
-// {
-// 	int		i;
-// 	int		len;
-// 	char	*mem;
-
-// 	if (!s1 || !set)
-// 		return (0);
-// 	i = 0;
-// 	len = ft_strlen(s1) - 1;
-// 	while (s1[i] && check(set, s1[i]))
-// 		i++;
-// 	while (len > 0 && check(set, s1[len]))
-// 		len--;
-// 	mem = ft_substr(s1, i, len - i + 1);
-// 	//free(s1);
-// 	return (mem);
-// }
-
-void	ft_free(char **strs)
+char	*remove_quotes(char *str, int i, int s, int d)
 {
-	int	i;
+	char	*ptr;
+	int		k;
 
-	i = 0;
-	while (strs[i])
+	ptr = malloc((ft_strlen(str) + 1) * sizeof(char));
+	k = 0;
+	while (str && str[i])
 	{
-		free(strs[i]);
+		if (str[i] == '\'' && d == 0 && s == 0)
+			s = 1;
+		else if (str[i] == '\'' && d == 0 && s == 1)
+			s = 0;
+		else if (str[i] == '\"' && s == 0 && d == 0)
+			d = 1;
+		else if (str[i] == '\"' && s == 0 && d == 1)
+			d = 0;
+		else
+			ptr[k++] = str[i];
 		i++;
 	}
-	free(strs);
+	return (free(str), ptr[k] = '\0', ptr);
 }

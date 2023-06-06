@@ -2,46 +2,49 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   deatch_redirc.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2023/05/22 20:48:30 by ayylaaba          #+#    #+#             */
 /*   Updated: 2023/05/22 20:48:30 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minishell.h"
 
-
-int	all_redric(char *src)
+void	count_redir(char s1, char s2, int *count, int *i)
 {
-	int i;
-	int count;
+	if ((s1 == '<' && s2 == '<') \
+			|| (s1 == '>' && s2 == '>'))
+	{
+		*count += 1;
+		*i += 2;
+	}
+	else if ((s1 == '>' || s1 == '<'))
+	{
+		*count += 1;
+		*i += 1;
+	}
+}
+
+int	all_redric(char *src, int i, int count)
+{
 	char ch;
 
-	i = 0;
-	count = 0;
 	while (src[i])
 	{
-		if ((src[i] == '<' && src[i + 1] == '<') || (src[i] == '>' && src[i
-				+ 1] == '>'))
+		count_redir(src[i], src[i + 1], &count, &i);
+		if (src[i] == '\'' || src[i] == '\"')
 		{
-			count++;
-			i += 2;
-		}
-		if ((src[i] == '>' || src[i] == '<'))
-		{
-			count++;
-			i++;
-		}
-		else if (src[i] == '\'' || src[i] == '\"')
-		{
-			i++;
-			ch = src[i];
-			while (src[i] && src[i] != ch)
+			ch = src[i++];
+			while (src[i] && (src[i] != '\'' || src[i] != '\"'))
+			{
+				count_redir(src[i], src[i + 1], &count, &i);	
 				i++;
+			}
 		}
 		else
 			i++;
@@ -66,26 +69,35 @@ int	hande_double(char c, char *line, int i)
 	return (i);
 }
 
-void	detach_rediec(char *str, char *line)
+void	detach_rediec(char *str, char *line, int i, int j)
 {
-	int i;
-	int j;
 
-	i = 0;
-	j = 0;
+	int s;
+	int d;
+
+	s = 0;
+	d = 0;
 	while (str[i])
 	{
-		if (str[i] == '>' && str[i + 1] == '>')
+		if (line[i] == '\'' && d == 0 && s == 0)
+			s = 1;
+		else if (line[i] == '\'' && d == 0 && s == 1)
+			s = 0;
+		else if (line[i] == '\"' && s == 0 && d == 0)
+			d = 1;
+		else if (line[i] == '\"' && s == 0 && d == 1)
+			d = 0;
+		if (d == 0 && s == 0 && (str[i] == '>' && str[i + 1] == '>'))
 		{
 			j = hande_double(str[i], line, j);
 			i += 2;
 		}
-		else if (str[i] == '<' && str[i + 1] == '<')
+		else if (d == 0 && s == 0 && (str[i] == '<' && str[i + 1] == '<'))
 		{
 			j = hande_double(str[i], line, j);
 			i += 2;
 		}
-		else if (str[i] == '>' || str[i] == '<')
+		else if (d == 0 && s == 0 && (str[i] == '>' || str[i] == '<'))
 		{
 			j = handle_single(str[i], line, j);
 			i++;

@@ -6,7 +6,7 @@
 /*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 12:17:12 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/17 16:01:57 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/05/31 09:35:19 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 char	**array_env(char **env, int j)
 {
-	char **p;
-	int i;
-	int k;
-	int len;
+	char	**p;
+	int		i;
+	int		k;
+	int		len;
 
 	len = 0;
 	i = 0;
@@ -33,30 +33,30 @@ char	**array_env(char **env, int j)
 	return (p);
 }
 
-int     len_env(char **en)
+int	len_env(char **en)
 {
-    int     i;
-    
-    i = 0;
-    while (en[i])
-        i++;
-    return (i);
+	int	i;
+
+	i = 0;
+	while (en[i])
+		i++;
+	return (i);
 }
 
-t_env   *ft_lstnew_env(char *s1, char *s2)
+t_env	*ft_lstnew_env(char *s1, char *s2)
 {
-    t_env   *env;
+	t_env	*env;
 
-    env = malloc(sizeof(t_env));
-    env->key  = s1;
-    env->data = s2;
-    env->next = NULL;
-    return (env);
+	env = malloc(sizeof(t_env));
+	env->key = s1;
+	env->data = s2;
+	env->next = NULL;
+	return (env);
 }
 
-t_env   *ft_last_env(t_env **list)
+t_env	*ft_last_env(t_env **list)
 {
-    t_env	*tmp;
+	t_env	*tmp;
 
 	tmp = (*list);
 	while (tmp->next)
@@ -64,15 +64,15 @@ t_env   *ft_last_env(t_env **list)
 	return (tmp);
 }
 
-void    ft_add_back_env(t_env **lst, t_env *new)
+void	ft_add_back_env(t_env **lst, t_env *new)
 {
-    t_env *tem;
-    
-    if (!*lst)
-        *lst = new;
-    else
-    {
-        tem = ft_last_env(lst);
-        tem->next = new;
-    }
+	t_env	*tem;
+
+	if (!*lst)
+		*lst = new;
+	else
+	{
+		tem = ft_last_env(lst);
+		tem->next = new;
+	}
 }

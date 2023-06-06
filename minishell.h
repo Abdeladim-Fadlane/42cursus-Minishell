@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/30 17:39:17 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:50:15 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include "./libft/libft.h"
 # include <dirent.h>
 # include <fcntl.h>
+# include <stdio.h>
+# include <unistd.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -82,6 +84,7 @@ typedef struct shell
 	t_cmd			*cmd;
 	int				index;
 	char			**all_cmds;
+	char			**str;
 	int				pipe;
 	struct shell	*next;
 	int				in_id;
@@ -102,14 +105,22 @@ typedef struct env
 	int				fd[2];
 	int				fd2[2];
 	int				n;
+	int				d;
+	int				ss;
 	int				fd1;
 	char			**ptr;
 	char			*s;
 	char			**p;
 }					t_env;
 
-int					check_delmiter(char *h);
 
+int					check(char *set, char s);
+int					ft_strrchr_v2(const char *s, char c);
+int					is_valid(char c);
+char				*remove_quotes(char *str, int i, int s, int d);
+
+char				*ft_strjoinn(char *s1, char *s2);
+int					check_delmiter(char *h);
 void				ft_add_back_env(t_env **lst, t_env *new);
 t_env				*ft_last_env(t_env **list);
 t_env				*ft_lstnew_env(char *s1, char *s2);
@@ -138,22 +149,23 @@ char				*charge_str(char c, char *src);
 char				*expand(char *s, char *str, t_env *env, int j);
 void				go_to_parse(char **s, t_minishell *new, t_env *env);
 char				**ft_split_parse(char *str, char c);
-char				**ft_charge(char **s, char *s1, char c);
+char				**ft_charge(char **s, char *s1, char c, int i);
 char				*full_charge(char *s, char c);
 int					word_len(char *s, char c);
 int					count_strs(char *str, char c);
-int					all_redric(char *src);
-void				detach_rediec(char *str, char *line);
+int					all_redric(char *src, int i, int j);
+void				detach_rediec(char *str, char *line, int i, int j);
 int					handle_single(char c, char *line, int i);
 int					hande_double(char c, char *line, int i);
 int					count_char(char *str, char c);
 int					check_qouts(char *line, char c);
-int					check_redir(char *s);
-int					handle_pipe(char *str);
+int					check_redir(char *s, int i);
+int					handle_pipe(char *str, int i);
 int					check_syntext(char *line);
 void				ft_free_v2(char **s, int j);
 int					check_redir_v2(char *s);
 int					content_count(char **s);
+char        		*readline(const char *);
 
 void				first_proccess(t_env *lst, char **cmd, t_minishell *p);
 void				midlle_proccess(t_env *lst, char **cmd, t_minishell *p);

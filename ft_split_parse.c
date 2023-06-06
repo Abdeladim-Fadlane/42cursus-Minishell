@@ -15,16 +15,16 @@
 
 #include "minishell.h"
 
-
 int	word_len(char *s, char c)
 {
-	int i;
-	char ch;
+	int		i;
+	char	ch;
 
 	i = 0;
 	while (s[i] && s[i] != c)
 	{
-		if ((c == ' ' && (s[i] == '\'' || s[i] == '\"')) || (s[i] == '\'' || s[i] == '\"'))
+		if ((c == ' ' && (s[i] == '\'' || s[i] == '\"')) || \
+			(s[i] == '\'' || s[i] == '\"'))
 		{
 			ch = s[i++];
 			while (s[i] && s[i] != ch)
@@ -40,9 +40,9 @@ int	word_len(char *s, char c)
 
 char	*full_charge(char *s, char c)
 {
-	int i;
-	char *w;
-	int len;
+	int		i;
+	char	*w;
+	int		len;
 
 	i = 0;
 	len = word_len(s, c);
@@ -56,35 +56,22 @@ char	*full_charge(char *s, char c)
 	return (w);
 }
 
-char	**ft_charge(char **s, char *s1, char c)
+char	**ft_charge(char **s, char *s1, char c, int i)
 {
-	int j;
-	int start;
-	int i;
-	char ch;
+	int	start;
+	int	j;
 
-	j = 0;
-	i = 0;
 	start = -1;
-	while (s1[i])
+	j = 0;
+	while (s1[++i])
 	{
-		// if (/*(c == ' ' && (s1[i] == '\'' || */((s1[i] == '\"')) || (s1[i] == '\''
-		// 			|| s1[i] == '\"'))
-		// {
-		// 	ch = s1[i];
-		// 	start = i;
-		// 	i++;
-		// 	while (s1[i] && s1[i] != ch)
-		// 		i++;
-		// }
 		if (s1[i] != c && start < 0)
 		{
 			start = i;
 			if (s1[i] == '\'' || s1[i] == '\"')
 			{
-				ch = s1[i];
 				i++;
-				while (s1[i] && s1[i] != ch)
+				while (s1[i] && (s1[i] != '\'' && s1[i] != '\"'))
 					i++;
 			}
 		}
@@ -92,24 +79,20 @@ char	**ft_charge(char **s, char *s1, char c)
 		{
 			s[j] = full_charge((s1 + start), c);
 			start = -1;
-			if (!s[j])
-				return (ft_free(s), NULL);
 			j++;
 		}
-		i++;
 	}
-	s[j] = NULL;
-	return (s);
+	return (free(s1), s[j] = NULL, s);
 }
 
 int	count_strs(char *str, char c)
 {
-	int i;
-	int num;
-	char ch;
+	int		i;
+	int		num;
+	char	ch;
 
 	i = 0;
-	num = 1; // i intiall by 1 becouse str is not empty
+	num = 1;
 	while (str[i])
 	{
 		if (str[i] == c)
@@ -133,8 +116,8 @@ int	count_strs(char *str, char c)
 
 char	**ft_split_parse(char *str, char c)
 {
-	int i;
-	char **s;
+	int		i;
+	char	**s;
 
 	i = 0;
 	if (!str || !str[0])
@@ -142,6 +125,6 @@ char	**ft_split_parse(char *str, char c)
 	s = malloc(sizeof(char *) * (count_strs(str, c) + 1));
 	if (!s)
 		return (NULL);
-	s = ft_charge(s, str, c);
+	s = ft_charge(s, str, c, -1);
 	return (s);
 }

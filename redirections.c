@@ -6,7 +6,7 @@
 /*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:48:39 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/15 17:48:40 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:00:57 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,8 @@ t_redir	*new_redir(t_content *content)
 		new->limiter = content->content;
 		new->type = DEL;
 	}
-	new->next = 0;
 	free(content);
-	return (new);
+	return (new->next = 0, new);
 }
 
 t_redir	*ft_last(t_redir *l)
@@ -66,4 +65,15 @@ void	add_redir(t_redir **lst, t_redir *new)
 		tem = ft_last(*lst);
 		tem->next = new;
 	}
+}
+
+t_content	*pars_w(char *s, int type, t_env *env, int j)
+{
+	t_content	*content;
+
+	content = malloc(sizeof(t_content));
+	content->content = expand(s, NULL, env, j);
+	content->content = remove_quotes(content->content, 0, 0, 0);
+	content->type = type;
+	return (content);
 }

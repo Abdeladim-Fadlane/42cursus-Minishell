@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/29 17:33:13 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:02:55 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	__main__(t_env *lst, t_minishell *list)
 {
 	t_minishell	*p;
 	t_object	*obj;
+	t_redir		*new;
 
 	p = list;
 	obj = NULL;
@@ -78,17 +79,26 @@ void	__main__(t_env *lst, t_minishell *list)
 		while (list->redirct)
 		{
 			if (list->redirct->type == INF)
+			{
 				open_infile(list->redirct->in, list);
+				free(list->redirct->in);
+			}
 			if (list->redirct->type == OUT)
+			{
 				open_outfile(list->redirct->out, list);
+				free(list->redirct->out);	
+			}
 			if (list->redirct->type == APE)
 				open_append(list->redirct->out, list);
 			if (list->redirct->type == DEL)
 			{
 				t_lstadd_back(&obj, t_lstnew(list->redirct->limiter));
 				lst->n = 1;
+				free(list->redirct->limiter);
 			}
+			new = list->redirct;
 			list->redirct = list->redirct->next;
+			free (list->redirct);
 		}
 		list = list->next;
 	}
