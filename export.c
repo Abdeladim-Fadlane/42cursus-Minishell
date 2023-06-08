@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:28:27 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/30 17:39:46 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/07 22:22:55 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,43 +51,43 @@ void	__check_data_exit(t_env *lst, char **s, int flag)
 				else
 				{
 					d = lst->data;
+					free(lst->data);
 					lst->data = ft_strjoin(d, s[1]);
 				}
 			}
 			else if (flag)
+			{
+				free(lst->data);
 				lst->data = s[1];
+			}
 		}
 		lst = lst->next;
 	}
 }
 
-void	__add__to__export__(t_env *lst, t_minishell *list)
+void	__add__to__export__(t_env *lst, t_minishell *list, int j)
 {
-	int	j;
-
 	if (list->all_cmds[1] == NULL)
 		return ;
-	j = 1;
 	while (list->all_cmds[j])
 	{
-		if (check_erorrs(list->all_cmds[j]) == 1)
-		{
+		if (check_erorrs_export(list->all_cmds[j], "export") == 1)
 			g_sig->sst = 1;
-			return ;
-		}
-		lst->ptr = ft_split(list->all_cmds[j], '=');
-		norm_export(lst);
-		if (__check_key_exit(lst, lst->p[0]))
+		else
 		{
-			if (check_flag(list->all_cmds[j]) == 1 && lst->ptr[1] == NULL)
-				lst->s = ft_strdup("");
-			else
-				lst->s = lst->ptr[1];
-			ft_lstadd_back(&lst, ft_lstnew(lst->p[0], lst->s));
-			free(lst->s);
+			lst->ptr = get_var(list->all_cmds[j]);
+			norm_export(lst);
+			if (__check_key_exit(lst, lst->p[0]))
+			{
+				if (check_flag(list->all_cmds[j]) == 1 && lst->ptr[1] == NULL)
+					lst->s = ft_strdup("");
+				else
+					lst->s = ft_strdup(lst->ptr[1]);
+				ft_lstadd_back(&lst, ft_lstnew(lst->p[0], lst->s));
+				free(lst->ptr);
+				free(lst->s);
+			}
 		}
-		free(lst->p);
-		free(lst->ptr);
 		j++;
 	}
 }

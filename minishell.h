@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/06 12:50:15 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/08 11:36:10 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct signal
 	int				j;
 	int				ft_flag;
 	int				sst;
+	int exp;
 }					t_sig;
 
 t_sig				*g_sig;
@@ -109,8 +110,10 @@ typedef struct env
 	int				ss;
 	int				fd1;
 	char			**ptr;
+	char			*ptr1;
 	char			*s;
 	char			**p;
+	char *sub;
 }					t_env;
 
 
@@ -118,7 +121,6 @@ int					check(char *set, char s);
 int					ft_strrchr_v2(const char *s, char c);
 int					is_valid(char c);
 char				*remove_quotes(char *str, int i, int s, int d);
-
 char				*ft_strjoinn(char *s1, char *s2);
 int					check_delmiter(char *h);
 void				ft_add_back_env(t_env **lst, t_env *new);
@@ -186,7 +188,7 @@ void				__main__(t_env *lst, t_minishell *list);
 void				t_lstadd_back(t_object **lst, t_object *new);
 void				ft_free(char **p);
 char				**__split__(char **env, int j);
-void				__add__to__export__(t_env *lst, t_minishell *s);
+void				__add__to__export__(t_env *lst, t_minishell *s,int j);
 char				*get_next_line(int fd);
 void				her_doc(char *s, t_env *p);
 char				**get_env(t_env *p);
@@ -207,12 +209,16 @@ void				main_herdoc(t_env *p, t_object *obj);
 void				exitstatus(int pid);
 void				error(char *s);
 char				*check_env(t_env *p);
-void				open_append(char *s, t_minishell *lst);
-void				open_outfile(char *s, t_minishell *lst);
-void				open_infile(char *s, t_minishell *lst);
-int					check_erorrs(char *s);
+int				open_append(char *s, t_minishell *lst);
+int				open_outfile(char *s, t_minishell *lst);
+int				open_infile(char *s, t_minishell *lst);
+int					check_erorrs(char *s,char *k);
 char				*ffree(char **strs, char *s);
-void				norm_export(t_env *lst);
 int					check_flag(char *s);
-void				__check_data_exit(t_env *lst, char **s, int flag);
+int	__check_add(char *s);
+int	check_erorrs_export(char *s,char *d);
+char **get_var(char *s);
+void	norm_export(t_env *lst);
+void	__check_data_exit(t_env *lst, char **s, int flag);
+void	ft_exit(t_minishell *list);
 #endif

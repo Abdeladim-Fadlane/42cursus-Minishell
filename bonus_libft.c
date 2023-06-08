@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 18:07:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/25 14:43:15 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/08 11:34:27 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ t_env	*ft_lstnew(char *s, char *d)
 	t_env	*list;
 
 	list = (t_env *)malloc(sizeof(t_env));
-	list->data = d;
-	list->key = s;
+	list->data = ft_strdup(d);
+	list->key = ft_strdup(s);
 	list->next = NULL;
 	return (list);
 }

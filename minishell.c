@@ -113,6 +113,24 @@ char	**parse_to_part(char *line)
 	return (s);
 }
 
+int		max_delmi(char *s)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == '<' && s[i + 1] == '<')
+			count++;
+		i++;
+	}
+	if (count > 16)
+		return (1);
+	return (0);
+}
+
 void	norm_readline(t_env *lst, t_minishell *shell, char *buff)
 {
 	char **arg;
@@ -120,11 +138,16 @@ void	norm_readline(t_env *lst, t_minishell *shell, char *buff)
 
 	arg = 0;
 	line = 0;
-	(void)lst;
+	//(void)lst;
 	if (check_syntext(buff) != 404 && buff[0])
 	{
 		line = malloc((ft_strlen(buff) + 1) + (all_redric(buff, 0, 0) * 2));
 		detach_rediec(buff, line, 0, 0);
+		if (max_delmi(line) == 1)
+		{
+			write(2, "maximum here-document count exceeded\n", 37);
+			exit (2);
+		}
 		arg = ft_split_parse(line, '|');
 		shell = parsing(arg, lst);
 		//print_data(shell);
@@ -165,7 +188,6 @@ void	__readline__(t_env *lst)
 			continue ;
 		}
 		norm_readline(lst, shell, buff);
-		//free(buff);
 	}
 }
 
@@ -175,18 +197,24 @@ int	main(int ac, char **av, char **env)
 	char **p;
 	int j;
 
-	g_sig = malloc(sizeof(t_sig)); //CHECK ENV AGMENT//
+	g_sig = malloc(sizeof(t_sig));
+	g_sig->flag =0;
 	j = -1;
 	lst = NULL;
+	char *s = ft_strdup ("OLDPWD");
 	while (++j < len_env(env))
 	{
 		p = array_env(env, j);
-		if (ft_strcmp(p[0], "OLDPWD") == 0)
+		if (ft_strcmp(p[0], s) == 0)
+		{
+			free(p[1]);
 			p[1] = NULL;
+		}
 		ft_add_back_env(&lst, ft_lstnew_env(p[0], p[1]));
-		free(p);
+		ft_free(p);
 	}
 	if (addoldpwd(lst, ac, av))
-		ft_lstadd_back(&lst, ft_lstnew("OLDPWD", NULL));
+		ft_lstadd_back(&lst, ft_lstnew(s, NULL));
+	free(s);
 	__readline__(lst);
 }

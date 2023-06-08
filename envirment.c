@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envirment.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 12:17:12 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/05/31 09:35:19 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/07 19:09:57 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ t_env	*ft_lstnew_env(char *s1, char *s2)
 	t_env	*env;
 
 	env = malloc(sizeof(t_env));
-	env->key = s1;
-	env->data = s2;
+	env->key = ft_strdup(s1);
+	env->data = ft_strdup(s2);
 	env->next = NULL;
 	return (env);
 }

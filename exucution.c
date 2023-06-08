@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 15:50:00 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/29 21:36:15 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/08 11:54:57 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,15 @@ void	exitstatus(int pid)
 		;
 	if (WIFEXITED(h))
 		g_sig->status = WEXITSTATUS(h);
-	
-	if(WIFSIGNALED(h))
+	if (WIFSIGNALED(h))
 	{
-		if(WTERMSIG(h) == 3)
+		if (WTERMSIG(h) == 3)
 		{
-			write(1,"Quit: 3\n",9);
+			write(1, "Quit: 3\n", 9);
 			g_sig->status = 131;
 		}
-		if(WTERMSIG(h) == 2)
-		 	g_sig->status = 130;
+		if (WTERMSIG(h) == 2)
+			g_sig->status = 130;
 	}
 }
 
@@ -71,7 +70,7 @@ void	error(char *s)
 	exit(127);
 }
 
-char *	ffree(char **strs,char *s)
+char	*ffree(char **strs, char *s)
 {
 	int	i;
 

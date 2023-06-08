@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:56:43 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/06/06 14:02:36 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:35:04 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,17 @@
 void	delmi_app(t_minishell **new, char **s, char *str, t_env *env)
 {
 	if (!ft_strcmp(*s, "<"))
-	{
 		add_redir(&(*new)->redirct, new_redir(pars_w(str, INF, env, 0)));
-	}
 	else if (!ft_strcmp(*s, ">"))
-	{
 		add_redir(&(*new)->redirct, new_redir(pars_w(str, OUT, env, 0)));
-	}
 	else if (!ft_strcmp(*s, "<<"))
 	{
+		if (check_delmiter(str) == 1)
+			g_sig->dude = 1;
 		add_redir(&(*new)->redirct, new_redir(pars_w(str, DEL, env, 1)));
 	}
 	else if (!ft_strcmp(*s, ">>"))
-	{
 		add_redir(&(*new)->redirct, new_redir(pars_w(str, APE, env, 0)));
-	}
 }
 
 void	ft_intial_new(t_minishell **new, int index, int pipe, char **s)
