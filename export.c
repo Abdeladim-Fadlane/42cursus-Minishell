@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:28:27 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/07 22:22:55 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/08 21:50:14 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	expand_data(t_env *lst, char **s)
 		if (ft_strcmp(lst->key, s[0]) == 0)
 		{
 			if (ft_strcmp(lst->data, s[1]))
+			{
+				free(lst->data);
 				lst->data = ft_strdup(s[1]);
+			}		
 		}
 		lst = lst->next;
 	}
@@ -39,10 +42,13 @@ void	expand_data(t_env *lst, char **s)
 void	__check_data_exit(t_env *lst, char **s, int flag)
 {
 	char	*d;
+	char **ptr;
 
+	ptr = ft_split(s[0], '+');
 	while (lst)
 	{
-		if (ft_strcmp(lst->key, ft_split(s[0], '+')[0]) == 0)
+		
+		if (ft_strcmp(lst->key, ptr[0]) == 0)
 		{
 			if (flag == 0)
 			{
@@ -50,9 +56,10 @@ void	__check_data_exit(t_env *lst, char **s, int flag)
 					lst->data = s[1];
 				else
 				{
-					d = lst->data;
+					d = ft_strdup(lst->data);
 					free(lst->data);
 					lst->data = ft_strjoin(d, s[1]);
+					free(d);
 				}
 			}
 			else if (flag)
@@ -63,6 +70,7 @@ void	__check_data_exit(t_env *lst, char **s, int flag)
 		}
 		lst = lst->next;
 	}
+	ft_free(ptr);
 }
 
 void	__add__to__export__(t_env *lst, t_minishell *list, int j)
@@ -84,9 +92,10 @@ void	__add__to__export__(t_env *lst, t_minishell *list, int j)
 				else
 					lst->s = ft_strdup(lst->ptr[1]);
 				ft_lstadd_back(&lst, ft_lstnew(lst->p[0], lst->s));
-				free(lst->ptr);
 				free(lst->s);
 			}
+			ft_free(lst->ptr);
+			ft_free(lst->p);
 		}
 		j++;
 	}

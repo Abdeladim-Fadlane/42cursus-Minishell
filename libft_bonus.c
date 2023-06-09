@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:41:11 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/24 22:02:46 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:57:56 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_object	*t_lstnew(char *s)
 	t_object	*list;
 
 	list = (t_object *)malloc(sizeof(t_object));
-	list->s = s;
+	list->s = ft_strdup(s);
 	list->next = NULL;
 	return (list);
 }

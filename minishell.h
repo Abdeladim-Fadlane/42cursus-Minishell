@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
+/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/09 11:20:06 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:37:26 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,10 @@
 # include "./libft/libft.h"
 # include <dirent.h>
 # include <fcntl.h>
-# include <stdio.h>
-# include <unistd.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
@@ -46,8 +45,7 @@ typedef struct signal
 	int				j;
 	int				ft_flag;
 	int				sst;
-	int				start;
-	int exp;
+	int				exp;
 }					t_sig;
 
 t_sig				*g_sig;
@@ -114,13 +112,10 @@ typedef struct env
 	char			*ptr1;
 	char			*s;
 	char			**p;
-	char *sub;
+	char			*sub;
 }					t_env;
 
-
-int					skip_qoute(char *s, int *i, int k);
-void				check_close_qotes(char *s, int *d, int *ss);
-void				ft_print(char **s);
+void	ft_globle_free(t_minishell *shell);
 int					check(char *set, char s);
 int					ft_strrchr_v2(const char *s, char c);
 int					is_valid(char c);
@@ -162,7 +157,7 @@ int					count_strs(char *str, char c);
 int					all_redric(char *src, int i, int j);
 void				detach_rediec(char *str, char *line, int i, int j);
 int					handle_single(char c, char *line, int i);
-int					hande_double(char c, char *line, int j, int *i);
+int					hande_double(char c, char *line, int i);
 int					count_char(char *str, char c);
 int					check_qouts(char *line, char c);
 int					check_redir(char *s, int i);
@@ -171,8 +166,8 @@ int					check_syntext(char *line);
 void				ft_free_v2(char **s, int j);
 int					check_redir_v2(char *s);
 int					content_count(char **s);
-char        		*readline(const char *);
-
+char				*readline(const char *);
+int		max_delmi(char *s);
 void				first_proccess(t_env *lst, char **cmd, t_minishell *p);
 void				midlle_proccess(t_env *lst, char **cmd, t_minishell *p);
 int					last_proccess(t_env *lst, char **cmd, t_minishell *p);
@@ -192,7 +187,7 @@ void				__main__(t_env *lst, t_minishell *list);
 void				t_lstadd_back(t_object **lst, t_object *new);
 void				ft_free(char **p);
 char				**__split__(char **env, int j);
-void				__add__to__export__(t_env *lst, t_minishell *s,int j);
+void				__add__to__export__(t_env *lst, t_minishell *s, int j);
 char				*get_next_line(int fd);
 void				her_doc(char *s, t_env *p);
 char				**get_env(t_env *p);
@@ -213,16 +208,17 @@ void				main_herdoc(t_env *p, t_object *obj);
 void				exitstatus(int pid);
 void				error(char *s);
 char				*check_env(t_env *p);
-int				open_append(char *s, t_minishell *lst);
-int				open_outfile(char *s, t_minishell *lst);
-int				open_infile(char *s, t_minishell *lst);
-int					check_erorrs(char *s,char *k);
+int					open_append(char *s, t_minishell *lst);
+int					open_outfile(char *s, t_minishell *lst);
+int					open_infile(char *s, t_minishell *lst);
+int					check_erorrs(char *s, char *k);
 char				*ffree(char **strs, char *s);
 int					check_flag(char *s);
-int	__check_add(char *s);
-int	check_erorrs_export(char *s,char *d);
-char **get_var(char *s);
-void	norm_export(t_env *lst);
-void	__check_data_exit(t_env *lst, char **s, int flag);
-void	ft_exit(t_minishell *list);
+int					__check_add(char *s);
+int					check_erorrs_export(char *s, char *d);
+char				**get_var(char *s);
+void				norm_export(t_env *lst);
+void				__check_data_exit(t_env *lst, char **s, int flag);
+void				ft_exit(t_minishell *list);
+int					addoldpwd(t_env *lst, int ac, char **av);
 #endif

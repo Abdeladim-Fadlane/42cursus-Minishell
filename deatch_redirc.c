@@ -32,7 +32,7 @@ void	count_redir(char s1, char s2, int *count, int *i)
 
 int	all_redric(char *src, int i, int count)
 {
-	char	ch;
+	char ch;
 
 	while (src[i])
 	{
@@ -42,7 +42,7 @@ int	all_redric(char *src, int i, int count)
 			ch = src[i++];
 			while (src[i] && (src[i] != '\'' || src[i] != '\"'))
 			{
-				count_redir(src[i], src[i + 1], &count, &i);
+				count_redir(src[i], src[i + 1], &count, &i);	
 				i++;
 			}
 		}
@@ -60,30 +60,43 @@ int	handle_single(char c, char *line, int i)
 	return (i);
 }
 
-int	hande_double(char c, char *line, int j, int *i)
+int	hande_double(char c, char *line, int i)
 {
-	*i += 2;
-	line[j++] = ' ';
-	line[j++] = c;
-	line[j++] = c;
-	line[j++] = ' ';
-	return (j);
+	line[i++] = ' ';
+	line[i++] = c;
+	line[i++] = c;
+	line[i++] = ' ';
+	return (i);
 }
 
 void	detach_rediec(char *str, char *line, int i, int j)
 {
-	int	s;
-	int	d;
+
+	int s;
+	int d;
 
 	s = 0;
 	d = 0;
 	while (str[i])
 	{
-		check_close_qotes(str + i, &d, &s);
+		if (line[i] == '\'' && d == 0 && s == 0)
+			s = 1;
+		else if (line[i] == '\'' && d == 0 && s == 1)
+			s = 0;
+		else if (line[i] == '\"' && s == 0 && d == 0)
+			d = 1;
+		else if (line[i] == '\"' && s == 0 && d == 1)
+			d = 0;
 		if (d == 0 && s == 0 && (str[i] == '>' && str[i + 1] == '>'))
-			j = hande_double(str[i], line, j, &i);
+		{
+			j = hande_double(str[i], line, j);
+			i += 2;
+		}
 		else if (d == 0 && s == 0 && (str[i] == '<' && str[i + 1] == '<'))
-			j = hande_double(str[i], line, j, &i);
+		{
+			j = hande_double(str[i], line, j);
+			i += 2;
+		}
 		else if (d == 0 && s == 0 && (str[i] == '>' || str[i] == '<'))
 		{
 			j = handle_single(str[i], line, j);

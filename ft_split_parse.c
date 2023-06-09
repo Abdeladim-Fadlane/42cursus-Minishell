@@ -58,27 +58,27 @@ char	*full_charge(char *s, char c)
 
 char	**ft_charge(char **s, char *s1, char c, int i)
 {
+	int	start;
 	int	j;
 
-	g_sig->start = -1;
+	start = -1;
 	j = 0;
 	while (s1[++i])
 	{
-		if (s1[i] != c && g_sig->start < 0)
+		if (s1[i] != c && start < 0)
 		{
-			g_sig->start = i;
+			start = i;
 			if (s1[i] == '\'' || s1[i] == '\"')
 			{
-				if (skip_qoute(s1 + i, &i, 0) == 1)
-					break ;
+				i++;
+				while (s1[i] && (s1[i] != '\'' && s1[i] != '\"'))
+					i++;
 			}
 		}
-		if (((s1[i] == c || i == ft_strlen(s1) - 1) && g_sig->start >= 0))
+		if (((s1[i] == c || i == ft_strlen(s1) - 1) && start >= 0))
 		{
-			s[j] = full_charge((s1 + g_sig->start), c);
-			if (j == count_strs(s1, c))
-				break ;
-			g_sig->start = -1;
+			s[j] = full_charge((s1 + start), c);
+			start = -1;
 			j++;
 		}
 	}

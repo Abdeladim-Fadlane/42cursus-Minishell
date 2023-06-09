@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:24:11 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 12:02:05 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/08 21:25:08 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_erorrs(char *s, char *d)
 	{
 		if (ft_isalpha(s[i]) == 0)
 		{
-			g_sig->status = 1;
+			g_sig->sst=1;
 			printf("%s:`%s' not a valid identifier\n", d, s);
 			return (1);
 		}
@@ -34,7 +34,7 @@ int	norn_errors(char *s, char **p, char *d)
 {
 	if (!p[0] || s[0] == '=')
 	{
-		g_sig->status = 1;
+		g_sig->sst = 1;
 		printf("%s:`%s' not a valid identifier\n", d, s);
 		ft_free(p);
 		return (1);
@@ -57,7 +57,6 @@ int	check_erorrs_export(char *s, char *d)
 	{
 		if (ft_isalpha(ptr[0][i]) == 0)
 		{
-			g_sig->status = 1;
 			printf("%s:`%s' not a valid identifier\n", d, s);
 			ft_free(p);
 			ft_free(ptr);

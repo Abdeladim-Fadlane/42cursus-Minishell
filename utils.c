@@ -60,6 +60,7 @@ int	check_redir(char *s, int i)
 
 int	handle_pipe(char *str, int i)
 {
+	char	ch;
 	char	*h;
 
 	h = ft_strtrim(str, " ");
@@ -69,8 +70,9 @@ int	handle_pipe(char *str, int i)
 	{
 		if (str[i] == '\'' || str[i] == '\"')
 		{
-			if (skip_qoute(str + i, &i, 1) == 0)
-				continue ;
+			ch = str[i++];
+			while (str[i] && str[i] != ch)
+				i++;
 		}
 		if (str[i] == '|' && str[i + 1] == '|')
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 14:59:52 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 15:00:25 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:16:17 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ void	norm_last(t_env *lst, char **cmd, t_minishell *p)
 	if (p->all_cmds[0] == NULL)
 		exit(0);
 	dup2(p->out_id, 1);
-	dup2(lst->flag_fd, 0);
+	if(p->in_id > 0)
+		dup2(p->in_id, 0);
+	else
+		dup2(lst->flag_fd, 0);
 	close(lst->fd[1]);
 	s = get_cmd(ptr, cmd[0], lst);
 	if (s == NULL)

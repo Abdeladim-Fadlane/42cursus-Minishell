@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:11:29 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 15:11:26 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:18:22 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ void	norm_midlle(t_env *lst, char **cmd, t_minishell *p, char **ptr)
 	}
 	else
 		dup2(lst->fd[1], 1);
-	dup2(lst->flag_fd, 0);
+	if(p->in_id > 0)
+		dup2(p->in_id, 0);
+	else
+		dup2(lst->flag_fd, 0);
 	close(lst->fd[0]);
 	s = get_cmd(ptr, cmd[0], lst);
 	if (s == NULL)
@@ -98,6 +101,7 @@ void	one_command(char **cmd, t_minishell *p, t_env *lst)
 	int	pid;
 
 	g_sig->signal = 1;
+	g_sig->sst = 0;
 	if (norm_one_cmd(lst, p) == 0)
 		return ;
 	else

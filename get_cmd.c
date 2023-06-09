@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:36:17 by afadlane          #+#    #+#             */
-/*   Updated: 2023/05/29 21:47:59 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:30:43 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,17 @@ char	*get_cmd(char **ptr, char *lst, t_env *p)
 		i++;
 	}
 	return (ffree(ptr, NULL));
+}
+
+int	addoldpwd(t_env *lst, int ac, char **av)
+{
+	(void)ac;
+	(void)av;
+	while (lst)
+	{
+		if (ft_strcmp(lst->key, "OLDPWD") == 0)
+			return (0);
+		lst = lst->next;
+	}
+	return (1);
 }

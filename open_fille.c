@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 21:45:43 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 14:37:19 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:39:54 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	open_outfile(char *s, t_minishell *lst)
 {
 
 	lst->out_id = open(s, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	//printf("-----1000---%d-->>>\n",lst->out_id);
 	if (lst->out_id == -1)
 	{
 		perror(s);

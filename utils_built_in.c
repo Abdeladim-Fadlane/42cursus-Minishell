@@ -6,7 +6,7 @@
 /*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 21:20:21 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 15:50:22 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/08 21:40:29 by afadlane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	__unset__(t_env *lst, t_minishell *ptr)
 			if (ft_strcmp(lst->next->key, ptr->all_cmds[i]) == 0)
 			{
 				tmp = lst->next->next;
+				free(lst->next->key);
+				free(lst->next->data);
 				free(lst->next);
 				lst->next = tmp;
 			}
