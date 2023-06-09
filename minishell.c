@@ -131,6 +131,19 @@ int		max_delmi(char *s)
 	return (0);
 }
 
+void	ft_print(char **s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		printf ("str == %s\n", s[i]);
+		i++;
+	}
+	printf ("str == %s\n", s[i]);
+}
+
 void	norm_readline(t_env *lst, t_minishell *shell, char *buff)
 {
 	char **arg;
@@ -150,7 +163,7 @@ void	norm_readline(t_env *lst, t_minishell *shell, char *buff)
 		}
 		arg = ft_split_parse(line, '|');
 		shell = parsing(arg, lst);
-		//print_data(shell);
+		print_data(shell);
 		__main__(lst, shell);
 	}
 	else
@@ -162,6 +175,24 @@ void	norm_readline(t_env *lst, t_minishell *shell, char *buff)
 	free(buff);
 	free(arg);
 	ft_globle_free(shell);
+}
+
+int		check_space(char *s)
+{
+	int	i;
+	int	count;
+	
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == ' ')
+			count++;
+		i++;
+	}
+	if (count == ft_strlen(s))
+		return (1);
+	return (0);
 }
 
 void	__readline__(t_env *lst)
@@ -182,7 +213,7 @@ void	__readline__(t_env *lst)
 			write(2, "exit\n", 5);
 			exit(0);
 		}
-		if (buff[0] == '\0')
+		if (buff[0] == '\0' || check_space(buff) == 1)
 		{
 			free(buff);
 			continue ;

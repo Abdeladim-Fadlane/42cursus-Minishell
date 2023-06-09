@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:04:10 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 11:36:10 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:20:06 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct signal
 	int				j;
 	int				ft_flag;
 	int				sst;
+	int				start;
 	int exp;
 }					t_sig;
 
@@ -117,6 +118,9 @@ typedef struct env
 }					t_env;
 
 
+int					skip_qoute(char *s, int *i, int k);
+void				check_close_qotes(char *s, int *d, int *ss);
+void				ft_print(char **s);
 int					check(char *set, char s);
 int					ft_strrchr_v2(const char *s, char c);
 int					is_valid(char c);
@@ -158,7 +162,7 @@ int					count_strs(char *str, char c);
 int					all_redric(char *src, int i, int j);
 void				detach_rediec(char *str, char *line, int i, int j);
 int					handle_single(char c, char *line, int i);
-int					hande_double(char c, char *line, int i);
+int					hande_double(char c, char *line, int j, int *i);
 int					count_char(char *str, char c);
 int					check_qouts(char *line, char c);
 int					check_redir(char *s, int i);

@@ -6,7 +6,7 @@
 /*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 09:56:12 by ayylaaba          #+#    #+#             */
-/*   Updated: 2023/06/01 18:45:58 by ayylaaba         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:32:18 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,20 @@ int	content_count(char **s)
 		i++;
 	}
 	return (count);
+}
+
+int	skip_qoute(char *s, int *i, int k)
+{
+	if (k == 0)
+	{
+		if (!s[*i])
+			return (1);
+	}
+	else
+	{
+		*i += 1;
+		while (s[*i] && (s[*i] != '\'' && s[*i] != '\"'))
+			*i += 1;
+	}
+	return (0);
 }

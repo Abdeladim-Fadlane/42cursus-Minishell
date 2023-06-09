@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afadlane <afadlane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayylaaba <ayylaaba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:01:15 by afadlane          #+#    #+#             */
-/*   Updated: 2023/06/08 19:52:38 by afadlane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:44:10 by ayylaaba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	her_doc(char *s, t_env *p)
 		{
 			buff = readline(">");
 			
-			if (g_sig->dude == 1)
+			if (g_sig->dude == 0)
 				buff = expand(buff, ft_strdup(""), p, 0);
 			strim_her_doc(s, buff);
 			if (buff[0] == '\0')
